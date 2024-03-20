@@ -1,8 +1,14 @@
-#include <iostream>
+#include "Renderer.h"
 
 int main() {
 
-    std::cout << "Hello World!" << std::endl;
+    Render::Renderer &renderer = Render::Renderer::GetInstance();
+
+    renderer.Init();
+
+    while (renderer.IsRunning()) {
+        renderer.Update();
+    }
 
     return 0;
 }
