@@ -36,6 +36,9 @@ set_source_files_properties(libs/stb_image.cpp include/stb_image.h
 
 set(LIBS glfw glad OpenGL::GL X11 Xrandr Xinerama Xi Xxf86vm Xcursor dl pthread freetype ${ASSIMP_LIBRARIES} STB_IMAGE imgui)
 
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
+
 include_directories(include/)
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
