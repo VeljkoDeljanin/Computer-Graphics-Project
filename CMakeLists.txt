@@ -16,8 +16,8 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-variable -Wno-unused-parameter -O3")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-file(GLOB SOURCES "src/*.cpp" "src/*.c")
-file(GLOB HEADERS "include/*.h" "include/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE HEADERS "include/*.h" "include/*.hpp")
 
 find_package(OpenGL REQUIRED)
 find_package(GLFW3 REQUIRED)
