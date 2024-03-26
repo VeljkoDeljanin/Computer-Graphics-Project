@@ -6,6 +6,11 @@
 namespace Render {
     class Window {
     public:
+        Window(const Window&) = delete;
+        Window(Window&&) = delete;
+        Window& operator=(const Window&) = delete;
+        Window& operator=(Window&&) = delete;
+
         static Window& GetInstance() {
             static Window instance;
             return instance;
@@ -19,15 +24,10 @@ namespace Render {
         static GLFWwindow *GetGlfwWindow();
 
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
-
-        Window(const Window&) = delete;
-        Window(Window&&) = delete;
-        Window& operator=(const Window&) = delete;
-        Window& operator=(Window&&) = delete;
     private:
+        Window() = default;
+
         static inline GLFWwindow *m_glfwWindow = nullptr;
         bool m_running = false;
-
-        Window() = default;
     };
 }

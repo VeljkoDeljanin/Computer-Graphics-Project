@@ -8,6 +8,11 @@
 
 #include "Window.h"
 #include "Data.h"
+#include "Controllers/ServiceLocator.h"
+
+void Render::GuiWindow::Notify(Controllers::Event event) {
+    m_eventQueue.push_back(event);
+}
 
 void Render::GuiWindow::Init() {
     IMGUI_CHECKVERSION();
@@ -18,12 +23,13 @@ void Render::GuiWindow::Init() {
 }
 
 void Render::GuiWindow::Update(float deltaTime) {
+    m_ProcessInput();
     m_deltaTime = deltaTime;
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    m_DrawMenu();
+    m_Draw();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -35,17 +41,62 @@ void Render::GuiWindow::Destroy() {
     ImGui::DestroyContext();
 }
 
-void Render::GuiWindow::m_DrawMenu() {
-    {
-        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
-        ImGui::SetNextWindowSize(ImVec2(300, 150));
-        ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
-        ImGui::Begin("Hello window");
-        ImGui::Text("Hello text");
-        ImGui::End();
+bool Render::GuiWindow::IsCursorEnabled() {
+    return m_cursorEnabled;
+}
+
+Render::GuiWindow::GuiWindow() {
+    Controllers::ServiceLocator::GetInstance().GetEventController().SubscribeToEvent(
+            Controllers::EventType::Keyboard, this
+    );
+}
+
+void Render::GuiWindow::m_ProcessInput() {
+    for (auto& event : m_eventQueue) {
+        if (event.eventType == Controllers::EventType::Keyboard) {
+            switch (event.keyboard.key) {
+                case GLFW_KEY_F1:
+                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+                        m_guiEnabled = !m_guiEnabled;
+                        if (m_guiEnabled) {
+                            m_cursorEnabled = true;
+                            glfwSetInputMode(Render::Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                        }
+                        else {
+                            m_cursorEnabled = false;
+                            glfwSetInputMode(Render::Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                        }
+                    }
+                    break;
+                case GLFW_KEY_C:
+                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed && m_guiEnabled) {
+                        m_cursorEnabled = !m_cursorEnabled;
+                        if (!m_cursorEnabled)
+                            glfwSetInputMode(Render::Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                        else
+                            glfwSetInputMode(Render::Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    }
+                    break;
+            }
+        }
     }
 
-    { // FPS
+    m_eventQueue.clear();
+}
+
+void Render::GuiWindow::m_Draw() const {
+    if (m_guiEnabled) {
+        {
+            ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+            ImGui::SetNextWindowSize(ImVec2(300, 150));
+            ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
+            ImGui::Begin("Hello window");
+            ImGui::Text("Hello text");
+            ImGui::End();
+        }
+    }
+
+    { // FPS counter
         ImGui::SetNextWindowBgAlpha(0.35f);
         ImGui::SetNextWindowPos(ImVec2(static_cast<float>(Data::WindowData::screenWidth - 70), 0), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(70, 50));
