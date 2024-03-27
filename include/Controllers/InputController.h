@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "Data.h"
+
 struct GLFWwindow;
 
 namespace Controllers {
@@ -13,8 +15,8 @@ namespace Controllers {
     };
 
     struct MouseMovementData {
-        double lastX = 0.0f;
-        double lastY = 0.0f;
+        double lastX = static_cast<float>(Data::WindowData::screenWidth) / 2.0f;
+        double lastY = static_cast<float>(Data::WindowData::screenHeight) / 2.0f;
         double currentX = 0.0f;
         double currentY = 0.0f;
         bool firstMouse = true;
