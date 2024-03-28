@@ -2,6 +2,7 @@
 
 #include "Controllers/InputController.h"
 #include "Controllers/EventController.h"
+#include "Controllers/EntityController.h"
 
 namespace Controllers {
     class ServiceLocator {
@@ -18,10 +19,12 @@ namespace Controllers {
 
         InputController& GetInputController() { return m_inputController; }
         EventController& GetEventController() { return m_eventController; }
+        EntityController& GetEntityController() { return m_entityController; }
     private:
         ServiceLocator() = default;
 
-        Controllers::InputController& m_inputController = Controllers::InputController::GetInstance();
-        Controllers::EventController& m_eventController = Controllers::EventController::GetInstance();
+        InputController& m_inputController = InputController::GetInstance();
+        EventController& m_eventController = EventController::GetInstance();
+        EntityController& m_entityController = EntityController::GetInstance();
     };
 }

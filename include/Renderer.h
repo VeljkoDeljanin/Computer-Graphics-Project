@@ -27,12 +27,12 @@ namespace Render {
     private:
         Renderer();
 
-        float m_deltaTime;
-        float m_lastFrame;
+        float m_deltaTime = 0.0f;
+        float m_lastFrame = 0.0f;
 
-        Render::Window &m_window;
-        Render::GuiWindow &m_guiWindow;
-        Render::Camera &m_camera;
+        Window &m_window;
+        GuiWindow &m_guiWindow;
+        Camera &m_camera;
 
         void m_UpdateWindows();
 
@@ -42,7 +42,7 @@ namespace Render {
 
         // For testing purposes
 #if 1
-        Render::Shader shader;
+        Shader shader;
         Model ourModel;
 #endif
     };

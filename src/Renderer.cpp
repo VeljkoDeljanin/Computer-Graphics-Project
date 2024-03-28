@@ -13,6 +13,7 @@
 #include "FileSystem.h"
 
 Render::Renderer::~Renderer() {
+    Controllers::ServiceLocator::GetInstance().GetEntityController().Clear();
     m_window.Destroy();
     m_guiWindow.Destroy();
     glfwTerminate();
@@ -44,8 +45,7 @@ void Render::Renderer::Init() {
 
     m_guiWindow.Init();
 
-    m_deltaTime = 0.0f;
-    m_lastFrame = 0.0f;
+    Controllers::ServiceLocator::GetInstance().GetEntityController().Init();
 
     // For testing purposes
 #if 1
@@ -62,14 +62,15 @@ void Render::Renderer::Update() {
     m_deltaTime = currentFrame - m_lastFrame;
     m_lastFrame = currentFrame;
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_camera.Update(m_deltaTime);
 
     shader.ActivateShader();
 
-    glm::mat4 projection = glm::perspective(glm::radians(m_camera.GetZoom()), (float)1600 / (float)900, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(m_camera.GetZoom()),
+                                            static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
+                                            0.1f, 100.0f);
     shader.SetMat4("projection", projection);
 
     glm::mat4 view = m_camera.GetViewMatrix();
@@ -85,6 +86,8 @@ void Render::Renderer::Update() {
 #endif
 
     shader.DeactivateShader();
+
+    Controllers::ServiceLocator::GetInstance().GetEntityController().Update();
 
     m_UpdateWindows();
     glfwPollEvents();

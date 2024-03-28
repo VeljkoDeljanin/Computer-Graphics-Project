@@ -20,7 +20,6 @@ namespace Render {
     private:
         std::vector<Mesh> m_meshes;
         std::unordered_map<std::string, Texture> m_loadedTexturesMap;
-        std::vector<Texture> m_loadedTextures;
         std::string m_directory;
 
         void m_LoadModel(const std::string &path);

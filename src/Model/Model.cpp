@@ -1,6 +1,6 @@
 #include "Model/Model.h"
 
-#include "stb_image.h"
+#include <stb_image.h>
 
 #include "Error.h"
 
@@ -107,7 +107,6 @@ void Render::Model::m_LoadMaterialTextures(aiMaterial *mat, aiTextureType type, 
             texture.path = str.C_Str();
             textures.push_back(texture);
             m_loadedTexturesMap[str.C_Str()] = texture;
-            m_loadedTextures.push_back(texture);
         }
     }
 }
