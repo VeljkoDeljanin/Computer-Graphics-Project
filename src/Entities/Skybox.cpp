@@ -1,8 +1,8 @@
 #include "Entities/Skybox.h"
 
-#include <stb_image.h>
-
 #include <utility>
+
+#include <stb_image.h>
 
 #include "Error.h"
 #include "Data.h"
