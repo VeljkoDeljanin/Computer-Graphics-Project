@@ -2,20 +2,14 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "Error.h"
 #include "Controllers/ServiceLocator.h"
-#include "FileSystem.h"
 
 Render::Renderer::~Renderer() {
     Controllers::ServiceLocator::GetInstance().GetEntityController().Clear();
     m_window.Destroy();
-    m_guiWindow.Destroy();
+    Render::GuiWindow::Destroy();
     glfwTerminate();
 }
 
@@ -43,18 +37,9 @@ void Render::Renderer::Init() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    m_guiWindow.Init();
+    Render::GuiWindow::Init();
 
     Controllers::ServiceLocator::GetInstance().GetEntityController().Init();
-
-    // For testing purposes
-#if 1
-    shader.Compile("resources/shaders/shader.vs", "resources/shaders/shader.fs");
-    shader.ActivateShader();
-
-    stbi_set_flip_vertically_on_load(true);
-    ourModel.Init(FileSystem::GetPath("resources/objects/backpack/backpack.obj"));
-#endif
 }
 
 void Render::Renderer::Update() {
@@ -62,30 +47,9 @@ void Render::Renderer::Update() {
     m_deltaTime = currentFrame - m_lastFrame;
     m_lastFrame = currentFrame;
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     m_camera.Update(m_deltaTime);
 
-    shader.ActivateShader();
-
-    glm::mat4 projection = glm::perspective(glm::radians(m_camera.GetZoom()),
-                                            static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
-                                            0.1f, 100.0f);
-    shader.SetMat4("projection", projection);
-
-    glm::mat4 view = m_camera.GetViewMatrix();
-    shader.SetMat4("view", view);
-
-    // For testing purposes
-#if 1
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f));
-    model = glm::scale(model, glm::vec3(1.0f));
-    shader.SetMat4("model", model);
-    ourModel.Draw(shader);
-#endif
-
-    shader.DeactivateShader();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Controllers::ServiceLocator::GetInstance().GetEntityController().Update();
 

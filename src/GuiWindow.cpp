@@ -9,6 +9,7 @@
 #include "Window.h"
 #include "Data.h"
 #include "Controllers/ServiceLocator.h"
+#include "Camera.h"
 
 void Render::GuiWindow::Notify(Controllers::Event event) {
     m_eventQueue.push_back(event);
@@ -88,10 +89,13 @@ void Render::GuiWindow::m_Draw() const {
     if (m_guiEnabled) {
         {
             ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
-            ImGui::SetNextWindowSize(ImVec2(300, 150));
-            ImGui::SetNextWindowCollapsed(true, ImGuiCond_Once);
-            ImGui::Begin("Hello window");
-            ImGui::Text("Hello text");
+            ImGui::SetNextWindowSize(ImVec2(400, 150));
+            ImGui::SetNextWindowCollapsed(false, ImGuiCond_Once);
+            ImGui::Begin("Camera info");
+            Camera &camera = Camera::GetInstance();
+            ImGui::Text("Camera position: (%f, %f, %f)", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+            ImGui::Text("(Yaw, Pitch): (%f, %f)", camera.GetYaw(), camera.GetPitch());
+            ImGui::Text("Camera front: (%f, %f, %f)", camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
             ImGui::End();
         }
     }

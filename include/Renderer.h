@@ -39,11 +39,5 @@ namespace Render {
         static inline void m_CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
         static inline void m_ScrollCallback(GLFWwindow *window, double xpos, double ypos);
         static inline void m_KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-
-        // For testing purposes
-#if 1
-        Shader shader;
-        Model ourModel;
-#endif
     };
 }

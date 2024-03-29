@@ -33,6 +33,10 @@ namespace Render {
 
         [[nodiscard]] glm::mat4 GetViewMatrix() const;
         [[nodiscard]] float GetZoom() const;
+        [[nodiscard]] glm::vec3 GetPosition() const;
+        [[nodiscard]] float GetYaw() const;
+        [[nodiscard]] float GetPitch() const;
+        [[nodiscard]] glm::vec3 GetFront() const;
 
         void ProcessKeyboard(Direction direction, float deltaTime);
         void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
@@ -40,17 +44,17 @@ namespace Render {
     private:
         Camera();
 
-        float yaw              = -90.0f;
-        float pitch            = 0.0f;
-        float movementSpeed    = 2.5f;
-        float mouseSensitivity = 0.1f;
-        float zoom             = 45.0f;
+        float Yaw              = -270.0f;
+        float Pitch            = 0.0f;
+        float MovementSpeed    = 2.5f;
+        float MouseSensitivity = 0.1f;
+        float Zoom             = 45.0f;
 
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
-        glm::vec3 worldUp  = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 up       = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 right    = {};
-        glm::vec3 front    = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 Position;
+        glm::vec3 WorldUp;
+        glm::vec3 Up{};
+        glm::vec3 Right{};
+        glm::vec3 Front;
 
         std::vector<Controllers::Event> m_eventQueue;
         std::array<bool, 6> m_movementDirectionVector = {false};

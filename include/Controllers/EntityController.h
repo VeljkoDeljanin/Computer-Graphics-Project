@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -26,7 +27,7 @@ namespace Controllers {
     private:
         EntityController() = default;
 
-        std::unordered_map<std::string, std::unique_ptr<Entities::Entity>> m_entities;
+        std::vector<std::unique_ptr<Entities::Entity>> m_entities;
         std::unordered_map<std::string, std::shared_ptr<Render::Shader>> m_shaders;
 
         void m_InitEntities();

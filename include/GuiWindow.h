@@ -17,9 +17,9 @@ namespace Render {
 
         void Notify(Controllers::Event event) override;
 
-        void Init();
+        static void Init();
         void Update(float deltaTime);
-        void Destroy();
+        static void Destroy();
 
         static bool IsCursorEnabled();
     private:

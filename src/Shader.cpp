@@ -8,7 +8,7 @@
 
 #include "Error.h"
 
-void Render::Shader::Compile(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
+Render::Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
     // build and compile our shader program
     // ------------------------------------
     // vertex shader
@@ -55,17 +55,17 @@ void Render::Shader::Compile(const std::string& vertexShaderPath, const std::str
     m_ID = shaderProgram;
 }
 
+Render::Shader::~Shader() {
+    glDeleteProgram(m_ID);
+    m_ID = 0;
+}
+
 void Render::Shader::ActivateShader() const {
     glUseProgram(m_ID);
 }
 
 void Render::Shader::DeactivateShader() {
     glUseProgram(0);
-}
-
-void Render::Shader::DeleteProgram() {
-    glDeleteProgram(m_ID);
-    m_ID = 0;
 }
 
 void Render::Shader::SetBool(const std::string &name, bool value) const {

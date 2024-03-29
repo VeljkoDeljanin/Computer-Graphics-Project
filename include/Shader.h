@@ -7,12 +7,11 @@
 namespace Render {
     class Shader {
     public:
-        Shader() = default;
+        Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+        ~Shader();
 
-        void Compile(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
         void ActivateShader() const;
-        void DeactivateShader();
-        void DeleteProgram();
+        static void DeactivateShader();
 
         void SetBool(const std::string &name, bool value) const;
         void SetInt(const std::string &name, int value) const;

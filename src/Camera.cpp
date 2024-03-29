@@ -58,64 +58,71 @@ void Render::Camera::Update(float dt) {
 }
 
 glm::mat4 Render::Camera::GetViewMatrix() const {
-    return glm::lookAt(position, position + front, up);
+    return glm::lookAt(Position, Position + Front, Up);
 }
 
 float Render::Camera::GetZoom() const {
-    return zoom;
+    return Zoom;
+}
+
+glm::vec3 Render::Camera::GetPosition() const {
+    return Position;
 }
 
 void Render::Camera::ProcessKeyboard(Render::Direction direction, float deltaTime) {
-    float velocity = movementSpeed * deltaTime;
+    float velocity = MovementSpeed * deltaTime;
     switch (direction) {
         case Render::Direction::FORWARD:
-            position += front * velocity;
+            Position += Front * velocity;
             break;
         case Render::Direction::BACKWARD:
-            position -= front * velocity;
+            Position -= Front * velocity;
             break;
         case Render::Direction::RIGHT:
-            position += right * velocity;
+            Position += Right * velocity;
             break;
         case Render::Direction::LEFT:
-            position -= right * velocity;
+            Position -= Right * velocity;
             break;
         case Render::Direction::UP:
-            position += worldUp * velocity;
+            Position += WorldUp * velocity;
             break;
         case Render::Direction::DOWN:
-            position -= worldUp * velocity;
+            Position -= WorldUp * velocity;
             break;
     }
+
+//    Position.y = 1.0f;
 }
 
 void Render::Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
-    xoffset *= mouseSensitivity;
-    yoffset *= mouseSensitivity;
+    xoffset *= MouseSensitivity;
+    yoffset *= MouseSensitivity;
 
-    yaw   += xoffset;
-    pitch += yoffset;
+    Yaw   += xoffset;
+    Pitch += yoffset;
 
     if (constrainPitch) {
-        if (pitch > 89.f)
-            pitch = 89.f;
-        if (pitch < -89.f)
-            pitch = -89.f;
+        if (Pitch > 89.0f)
+            Pitch = 89.0f;
+        if (Pitch < -89.0f)
+            Pitch = -89.0f;
     }
 
     m_UpdateCameraVectors();
 }
 
 void Render::Camera::ProcessMouseScroll(float yoffset) {
-    zoom -= yoffset;
+    Zoom -= yoffset;
 
-    if (zoom < 1.0f)
-        zoom = 1.0f;
-    if (zoom > 45.0f)
-        zoom = 45.0f;
+    if (Zoom < 1.0f)
+        Zoom = 1.0f;
+    if (Zoom > 45.0f)
+        Zoom = 45.0f;
 }
 
-Render::Camera::Camera() {
+Render::Camera::Camera() : Position(glm::vec3(0.0f, 1.0f, -11.0f)), WorldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
+                           Front(glm::vec3(0.0f, 0.0f, 1.0f)) {
     Controllers::ServiceLocator::GetInstance().GetEventController().SubscribeToEvent(
             Controllers::EventType::Keyboard, this
     );
@@ -129,12 +136,24 @@ Render::Camera::Camera() {
 }
 
 void Render::Camera::m_UpdateCameraVectors() {
-    glm::vec3 newFront;
-    newFront.x = static_cast<float>(cos(glm::radians(yaw)) * cos(glm::radians(pitch)));
-    newFront.y = static_cast<float>(sin(glm::radians(pitch)));
-    newFront.z = static_cast<float>(sin(glm::radians(yaw)) * cos(glm::radians(pitch)));
+    glm::vec3 front;
+    front.x = static_cast<float>(cos(glm::radians(Yaw)) * cos(glm::radians(Pitch)));
+    front.y = static_cast<float>(sin(glm::radians(Pitch)));
+    front.z = static_cast<float>(sin(glm::radians(Yaw)) * cos(glm::radians(Pitch)));
 
-    front = glm::normalize(newFront);
-    right = glm::normalize(glm::cross(front, worldUp));
-    up    = glm::normalize(glm::cross(right, front));
+    Front = glm::normalize(front);
+    Right = glm::normalize(glm::cross(Front, WorldUp));
+    Up    = glm::normalize(glm::cross(Right, Front));
+}
+
+float Render::Camera::GetYaw() const {
+    return Yaw;
+}
+
+float Render::Camera::GetPitch() const {
+    return Pitch;
+}
+
+glm::vec3 Render::Camera::GetFront() const {
+    return Front;
 }
