@@ -15,7 +15,7 @@ void Render::Window::Init() {
     ASSERT(m_glfwWindow != nullptr, "Failed to create GLFW window");
 
     glfwMakeContextCurrent(m_glfwWindow);
-    glfwSwapInterval(1);
+    glfwSwapInterval(ProgramState::VSync ? 1 : 0);
 
     m_running = true;
 }
@@ -26,7 +26,7 @@ bool Render::Window::IsRunning() const {
 
 void Render::Window::Update() {
     m_ProcessInput();
-    glfwSwapInterval(1);
+    glfwSwapInterval(ProgramState::VSync ? 1 : 0);
 
     if (!glfwWindowShouldClose(m_glfwWindow)) {
         glfwSwapBuffers(m_glfwWindow);
@@ -61,7 +61,12 @@ void Render::Window::m_ProcessInput() {
             switch (event.keyboard.key) {
                 case GLFW_KEY_F:
                     if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
-                        ProgramState::flashlightOn = !ProgramState::flashlightOn;
+                        ProgramState::flashlight = !ProgramState::flashlight;
+                    }
+                    break;
+                case GLFW_KEY_V:
+                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+                        ProgramState::VSync = !ProgramState::VSync;
                     }
                     break;
             }

@@ -95,6 +95,7 @@ void Render::GuiWindow::m_Draw() const {
             Camera &camera = Camera::GetInstance();
             ImGui::Text("Camera position: (%f, %f, %f)", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
             ImGui::Text("(Yaw, Pitch): (%f, %f)", camera.GetYaw(), camera.GetPitch());
+            ImGui::Text("Zoom: %f", camera.GetZoom());
             ImGui::Text("Camera front: (%f, %f, %f)", camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
             ImGui::End();
         }

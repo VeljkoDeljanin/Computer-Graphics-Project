@@ -8,12 +8,7 @@
 #include "Data.h"
 #include "Camera.h"
 
-Entities::Skybox::Skybox(std::shared_ptr<Render::Shader> shader)
-: projection(glm::perspective(glm::radians(Render::Camera::GetInstance().GetZoom()),
-                              static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
-                              0.1f, 100.0f)) {
-    m_shader = std::move(shader);
-
+Entities::Skybox::Skybox(std::shared_ptr<Render::Shader> shader) : m_shader(std::move(shader)) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -29,7 +24,6 @@ Entities::Skybox::Skybox(std::shared_ptr<Render::Shader> shader)
 
     m_shader->ActivateShader();
     m_shader->SetInt("skybox", 0);
-    m_shader->SetMat4("projection", projection);
     m_shader->DeactivateShader();
 }
 
@@ -44,6 +38,11 @@ void Entities::Skybox::Update() {
     glDepthFunc(GL_LEQUAL);
 
     m_shader->ActivateShader();
+
+    projection = glm::mat4(glm::perspective(glm::radians(Render::Camera::GetInstance().GetZoom()),
+                                            static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
+                                            0.1f, 100.0f));
+    m_shader->SetMat4("projection", projection);
 
     view = glm::mat4(glm::mat3(Render::Camera::GetInstance().GetViewMatrix()));
     m_shader->SetMat4("view", view);

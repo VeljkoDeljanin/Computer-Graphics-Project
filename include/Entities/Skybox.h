@@ -11,10 +11,12 @@ namespace Entities {
         void Update() override;
 
     private:
+        std::shared_ptr<Render::Shader> m_shader;
+
         unsigned int VAO{}, VBO{};
         unsigned int m_textureID{};
 
-        glm::mat4 projection;
+        glm::mat4 projection{};
         glm::mat4 view{};
 
         static unsigned int m_LoadCubemap();

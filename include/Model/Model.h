@@ -15,6 +15,7 @@ namespace Render {
         Model(const std::string &path);
 
         void Draw(Shader &shader);
+        void SetShaderTextureNamePrefix(const std::string &path);
     private:
         std::vector<Mesh> m_meshes;
         std::unordered_map<std::string, Texture> m_loadedTexturesMap;

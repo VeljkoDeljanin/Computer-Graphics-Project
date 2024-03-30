@@ -13,6 +13,11 @@ void Render::Model::Draw(Render::Shader &shader) {
         mesh.Draw(shader);
 }
 
+void Render::Model::SetShaderTextureNamePrefix(const std::string &path) {
+    for(auto &mesh : m_meshes)
+        mesh.SetGlslIdentifierPrefix(path);
+}
+
 void Render::Model::m_LoadModel(const std::string &path) {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate

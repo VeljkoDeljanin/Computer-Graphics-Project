@@ -1,5 +1,7 @@
 #pragma once
 
 struct ProgramState {
-    static inline bool flashlightOn = false;
+    static inline bool flashlight = false;
+
+    static inline bool VSync = true;
 };

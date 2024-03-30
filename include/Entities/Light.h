@@ -35,12 +35,16 @@ namespace Entities {
 
         void Update() override;
     private:
+        std::shared_ptr<Render::Shader> m_shader;
+
         DirLight m_dirLight{};
         SpotLight m_spotLight{};
 
         float m_shininess{};
 
-        void m_UpdateDirLight();
-        void m_UpdateSpotLight();
+        void m_UpdateShader(const std::shared_ptr<Render::Shader>& shader);
+
+        void m_UpdateDirLight(const std::shared_ptr<Render::Shader>& shader) const;
+        void m_UpdateSpotLight(const std::shared_ptr<Render::Shader>& shader) const;
     };
 }

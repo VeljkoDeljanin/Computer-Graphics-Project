@@ -5,10 +5,9 @@
 #include <glad/glad.h>
 
 #include "Model/Model.h"
+#include "Camera.h"
 
-Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) {
-    m_shader = std::move(shader);
-
+Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) : m_shader(std::move(shader)) {
     m_SetupForestGround();
     m_SetupCobblestoneGround();
 
@@ -18,8 +17,8 @@ Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) {
     m_cobblestoneSpecMap = Render::TextureFromFile("cobblestone_spec.png", "resources/textures/cobblestone_ground");
 
     m_shader->ActivateShader();
-    m_shader->SetInt("material.diffuse", 0);
-    m_shader->SetInt("material.specular", 1);
+    m_shader->SetInt("material.texture_diffuse1", 0);
+    m_shader->SetInt("material.texture_specular1", 1);
     m_shader->DeactivateShader();
 }
 
@@ -33,6 +32,7 @@ Entities::Ground::~Ground() {
 }
 
 void Entities::Ground::Update() {
+    glCullFace(GL_FRONT);
     m_shader->ActivateShader();
 
     model = glm::mat4(1.0f);
@@ -54,6 +54,7 @@ void Entities::Ground::Update() {
     glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, nullptr);
 
     m_shader->DeactivateShader();
+    glCullFace(GL_BACK);
 }
 
 void Entities::Ground::m_SetupForestGround() {
@@ -89,6 +90,8 @@ void Entities::Ground::m_SetupForestGround() {
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+
+    glBindVertexArray(0);
 }
 
 void Entities::Ground::m_SetupCobblestoneGround() {
@@ -134,4 +137,6 @@ void Entities::Ground::m_SetupCobblestoneGround() {
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+
+    glBindVertexArray(0);
 }

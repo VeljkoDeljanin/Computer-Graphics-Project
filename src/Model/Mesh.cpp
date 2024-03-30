@@ -31,7 +31,7 @@ void Render::Mesh::Draw(Shader &shader) {
             ASSERT(false, "Unknown texture type");
 
         name.append(number);
-        shader.SetInt(name, static_cast<int>(i));
+        shader.SetInt(m_glslIdentifierPrefix + name, static_cast<int>(i));
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
 
@@ -40,6 +40,10 @@ void Render::Mesh::Draw(Shader &shader) {
 
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
+}
+
+void Render::Mesh::SetGlslIdentifierPrefix(const std::string &prefix) {
+    m_glslIdentifierPrefix = prefix;
 }
 
 void Render::Mesh::m_SetupMesh() {

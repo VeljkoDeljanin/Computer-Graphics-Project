@@ -34,8 +34,10 @@ namespace Render {
              std::vector<Texture> &tex);
 
         void Draw(Shader &shader);
+        void SetGlslIdentifierPrefix(const std::string &prefix);
     private:
         unsigned int VAO{}, VBO{}, EBO{};
+        std::string m_glslIdentifierPrefix;
 
         void m_SetupMesh();
     };

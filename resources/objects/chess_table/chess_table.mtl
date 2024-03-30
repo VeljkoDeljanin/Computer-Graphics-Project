@@ -1,0 +1,64 @@
+# Blender 4.0.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Black_Eagle_Texture
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Black_Eagle_Texture_diffuse.png
+map_bump Black_Eagle_Texture_normal.png
+map_Ks Black_Eagle_Texture_specularGlossiness.png
+
+newmtl Meneke_Texture
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Meneke_Texture_diffuse.png
+map_bump Meneke_Texture_normal.png
+map_Ka Meneke_Texture_occlusion.png
+map_Ks Meneke_Texture_specularGlossiness.png
+
+newmtl Verde_Guatemala
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Verde_Guatemala_diffuse.png
+map_bump Verde_Guatemala_normal.png
+map_Ks Verde_Guatemala_specularGlossiness.png
+
+newmtl sy_chrome_shiny
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black.png
+
+newmtl sy_dark_annodized_shiny
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd white.png
