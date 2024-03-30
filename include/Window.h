@@ -3,8 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Controllers/EventController.h"
+
 namespace Render {
-    class Window {
+    class Window : public Controllers::Observer {
     public:
         Window(const Window&) = delete;
         Window(Window&&) = delete;
@@ -16,6 +18,8 @@ namespace Render {
             return instance;
         }
 
+        void Notify(Controllers::Event event) override;
+
         void Init();
         [[nodiscard]] bool IsRunning() const;
         void Update();
@@ -25,9 +29,12 @@ namespace Render {
 
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
     private:
-        Window() = default;
+        Window();
 
         static inline GLFWwindow *m_glfwWindow = nullptr;
         bool m_running = false;
+        std::vector<Controllers::Event> m_eventQueue;
+
+        void m_ProcessInput();
     };
 }

@@ -51,6 +51,7 @@ in VS_OUT {
 
 uniform vec3 viewPosition;
 uniform DirLight dirLight;
+uniform SpotLight spotLight;
 uniform Material material;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -62,6 +63,7 @@ void main() {
     vec3 viewDir = normalize(viewPosition - fs_in.FragPos);
 
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
+    result += CalcSpotLight(spotLight, normal, fs_in.FragPos, viewDir);
 
     FragColor = vec4(result, 1.0f);
 }
@@ -120,7 +122,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, fs_in.TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, fs_in.TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, fs_in.TexCoords).xxx);
-    ambient *= attenuation * intensity;
+    ambient *= attenuation;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
 

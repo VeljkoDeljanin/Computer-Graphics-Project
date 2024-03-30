@@ -12,11 +12,9 @@
 namespace Render {
     class Model {
     public:
-        Model() = default;
+        Model(const std::string &path);
 
-        void Init(const std::string &path);
         void Draw(Shader &shader);
-
     private:
         std::vector<Mesh> m_meshes;
         std::unordered_map<std::string, Texture> m_loadedTexturesMap;

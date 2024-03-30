@@ -4,7 +4,7 @@
 
 #include "Error.h"
 
-void Render::Model::Init(const std::string &path) {
+Render::Model::Model(const std::string &path) {
     m_LoadModel(path);
 }
 

@@ -157,3 +157,11 @@ float Render::Camera::GetPitch() const {
 glm::vec3 Render::Camera::GetFront() const {
     return Front;
 }
+
+glm::vec3 Render::Camera::GetUp() const {
+    return Up;
+}
+
+glm::vec3 Render::Camera::GetRight() const {
+    return Right;
+}

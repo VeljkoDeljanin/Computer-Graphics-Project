@@ -37,6 +37,8 @@ namespace Render {
         [[nodiscard]] float GetYaw() const;
         [[nodiscard]] float GetPitch() const;
         [[nodiscard]] glm::vec3 GetFront() const;
+        [[nodiscard]] glm::vec3 GetUp() const;
+        [[nodiscard]] glm::vec3 GetRight() const;
 
         void ProcessKeyboard(Direction direction, float deltaTime);
         void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);

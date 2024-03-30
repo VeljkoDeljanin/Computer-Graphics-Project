@@ -17,8 +17,6 @@ namespace Entities {
         unsigned int m_cobblestoneDiffMap{}, m_cobblestoneSpecMap{};
 
         glm::mat4 model{};
-        glm::mat4 view{};
-        glm::mat4 projection;
 
         void m_SetupForestGround();
         void m_SetupCobblestoneGround();

@@ -5,12 +5,8 @@
 #include <glad/glad.h>
 
 #include "Model/Model.h"
-#include "Camera.h"
 
-Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader)
-: projection(glm::perspective(glm::radians(Render::Camera::GetInstance().GetZoom()),
-                              static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
-                              0.1f, 100.0f)) {
+Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) {
     m_shader = std::move(shader);
 
     m_SetupForestGround();
@@ -24,8 +20,6 @@ Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader)
     m_shader->ActivateShader();
     m_shader->SetInt("material.diffuse", 0);
     m_shader->SetInt("material.specular", 1);
-
-    m_shader->SetMat4("projection", projection);
     m_shader->DeactivateShader();
 }
 
@@ -40,9 +34,6 @@ Entities::Ground::~Ground() {
 
 void Entities::Ground::Update() {
     m_shader->ActivateShader();
-
-    view = Render::Camera::GetInstance().GetViewMatrix();
-    m_shader->SetMat4("view", view);
 
     model = glm::mat4(1.0f);
     m_shader->SetMat4("model", model);

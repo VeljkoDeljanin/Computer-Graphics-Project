@@ -1,6 +1,7 @@
 #include "Controllers/EntityController.h"
 
 #include "Entities/Light.h"
+#include "Entities/Model3D.h"
 #include "Entities/Ground.h"
 #include "Entities/Skybox.h"
 
@@ -21,6 +22,7 @@ void Controllers::EntityController::Clear() {
 
 void Controllers::EntityController::m_InitEntities() {
     m_entities.push_back(std::make_unique<Entities::Light>(m_shaders["entity"]));
+    m_entities.push_back(std::make_unique<Entities::Model3D>(m_shaders["entity"]));
     m_entities.push_back(std::make_unique<Entities::Ground>(m_shaders["entity"]));
     m_entities.push_back(std::make_unique<Entities::Skybox>(m_shaders["skybox"]));
 }

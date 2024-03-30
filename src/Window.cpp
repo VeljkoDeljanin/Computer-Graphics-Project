@@ -2,6 +2,12 @@
 
 #include "Data.h"
 #include "Error.h"
+#include "Controllers/ServiceLocator.h"
+#include "ProgramState.h"
+
+void Render::Window::Notify(Controllers::Event event) {
+    m_eventQueue.push_back(event);
+}
 
 void Render::Window::Init() {
     m_glfwWindow = glfwCreateWindow(Data::WindowData::screenWidth, Data::WindowData::screenHeight,
@@ -19,6 +25,7 @@ bool Render::Window::IsRunning() const {
 }
 
 void Render::Window::Update() {
+    m_ProcessInput();
     glfwSwapInterval(1);
 
     if (!glfwWindowShouldClose(m_glfwWindow)) {
@@ -40,4 +47,26 @@ GLFWwindow *Render::Window::GetGlfwWindow() {
 
 void Render::Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height); (void) window;
+}
+
+Render::Window::Window() {
+    Controllers::ServiceLocator::GetInstance().GetEventController().SubscribeToEvent(
+            Controllers::EventType::Keyboard, this
+    );
+}
+
+void Render::Window::m_ProcessInput() {
+    for (auto& event : m_eventQueue) {
+        if (event.eventType == Controllers::EventType::Keyboard) {
+            switch (event.keyboard.key) {
+                case GLFW_KEY_F:
+                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+                        ProgramState::flashlightOn = !ProgramState::flashlightOn;
+                    }
+                    break;
+            }
+        }
+    }
+
+    m_eventQueue.clear();
 }
