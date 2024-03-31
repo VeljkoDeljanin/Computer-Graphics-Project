@@ -101,12 +101,20 @@ void Render::GuiWindow::m_Draw() const {
         }
     }
 
+    { // Settings shortcut
+        ImGui::SetNextWindowBgAlpha(0.35f);
+        ImGui::SetNextWindowPos(ImVec2(static_cast<float>(Data::WindowData::screenWidth/2.0 - 46), 0));
+        ImGui::SetNextWindowSize(ImVec2(94, 50));
+        ImGui::Begin("Settings: F1", nullptr,
+                     ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
+        ImGui::End();
+    }
+
     { // FPS counter
         ImGui::SetNextWindowBgAlpha(0.35f);
-        ImGui::SetNextWindowPos(ImVec2(static_cast<float>(Data::WindowData::screenWidth - 70), 0), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(70, 50));
-        ImGui::SetNextWindowCollapsed(false, ImGuiCond_Always);
-        ImGui::Begin("FPS");
+        ImGui::SetNextWindowPos(ImVec2(static_cast<float>(Data::WindowData::screenWidth - 60), 0));
+        ImGui::SetNextWindowSize(ImVec2(60, 50));
+        ImGui::Begin("FPS:", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::Text("%.2f", std::floor(1 / m_deltaTime));
         ImGui::End();
     }

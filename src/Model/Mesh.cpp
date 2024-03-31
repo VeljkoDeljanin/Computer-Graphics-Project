@@ -46,6 +46,12 @@ void Render::Mesh::SetGlslIdentifierPrefix(const std::string &prefix) {
     m_glslIdentifierPrefix = prefix;
 }
 
+void Render::Mesh::Delete() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+}
+
 void Render::Mesh::m_SetupMesh() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

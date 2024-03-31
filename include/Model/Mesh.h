@@ -26,15 +26,17 @@ namespace Render {
 
     class Mesh {
     public:
+        Mesh(std::vector<Vertex> &vs, std::vector<unsigned int> &ind,
+             std::vector<Texture> &tex);
+
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture> textures;
 
-        Mesh(std::vector<Vertex> &vs, std::vector<unsigned int> &ind,
-             std::vector<Texture> &tex);
-
         void Draw(Shader &shader);
         void SetGlslIdentifierPrefix(const std::string &prefix);
+
+        void Delete();
     private:
         unsigned int VAO{}, VBO{}, EBO{};
         std::string m_glslIdentifierPrefix;

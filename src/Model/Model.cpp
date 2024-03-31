@@ -8,6 +8,11 @@ Render::Model::Model(const std::string &path) {
     m_LoadModel(path);
 }
 
+Render::Model::~Model() {
+    for (Mesh &mesh : m_meshes)
+        mesh.Delete();
+}
+
 void Render::Model::Draw(Render::Shader &shader) {
     for (auto &mesh : m_meshes)
         mesh.Draw(shader);

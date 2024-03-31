@@ -8,6 +8,7 @@
 
 Render::Renderer::~Renderer() {
     Controllers::ServiceLocator::GetInstance().GetEntityController().Clear();
+    m_framebuffer.Clear();
     m_window.Destroy();
     Render::GuiWindow::Destroy();
     glfwTerminate();
@@ -46,6 +47,8 @@ void Render::Renderer::Init() {
     Render::GuiWindow::Init();
 
     Controllers::ServiceLocator::GetInstance().GetEntityController().Init();
+
+    m_framebuffer.Init();
 }
 
 void Render::Renderer::Update() {
@@ -55,9 +58,14 @@ void Render::Renderer::Update() {
 
     m_camera.Update(m_deltaTime);
 
+    m_framebuffer.Bind();
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Controllers::ServiceLocator::GetInstance().GetEntityController().Update();
+
+    m_framebuffer.Unbind();
 
     m_UpdateWindows();
     glfwPollEvents();
@@ -70,7 +78,7 @@ bool Render::Renderer::IsRunning() {
 
 Render::Renderer::Renderer()
 : m_window(Render::Window::GetInstance()), m_guiWindow(Render::GuiWindow::GetInstance()),
-  m_camera(Render::Camera::GetInstance()) {
+  m_camera(Render::Camera::GetInstance()), m_framebuffer(Render::Framebuffer::GetInstance()) {
 
 }
 

@@ -22,10 +22,10 @@ namespace Entities {
         Render::Model m_chessTable;
 
         std::array<glm::vec3, 4> m_chessTablePositions {
-                glm::vec3(3.5f, 0.07f, -4.0f),
-                glm::vec3(3.5f, 0.07f, 4.0f),
-                glm::vec3(-3.5f, 0.07f, 4.0f),
-                glm::vec3(-3.5f, 0.07f, -4.0f)
+                glm::vec3(3.5f, 0.01f, -4.0f),
+                glm::vec3(3.5f, 0.01f, 4.0f),
+                glm::vec3(-3.5f, 0.01f, 4.0f),
+                glm::vec3(-3.5f, 0.01f, -4.0f)
         };
 
         std::array<float, 2> m_chessTableRotations {

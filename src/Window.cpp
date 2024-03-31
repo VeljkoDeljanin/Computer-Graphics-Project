@@ -58,20 +58,51 @@ Render::Window::Window() {
 void Render::Window::m_ProcessInput() {
     for (auto& event : m_eventQueue) {
         if (event.eventType == Controllers::EventType::Keyboard) {
-            switch (event.keyboard.key) {
-                case GLFW_KEY_F:
-                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+            if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+                switch (event.keyboard.key) {
+                    case GLFW_KEY_F:
                         ProgramState::flashlight = !ProgramState::flashlight;
-                    }
-                    break;
-                case GLFW_KEY_V:
-                    if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+                        break;
+                    case GLFW_KEY_V:
                         ProgramState::VSync = !ProgramState::VSync;
-                    }
-                    break;
+                        break;
+                    case GLFW_KEY_F3:
+                        if (!ProgramState::inversion)
+                            m_DisableAllPostProcessingEffects();
+                        ProgramState::inversion = !ProgramState::inversion;
+                        break;
+                    case GLFW_KEY_F4:
+                        if (!ProgramState::grayscale)
+                            m_DisableAllPostProcessingEffects();
+                        ProgramState::grayscale = !ProgramState::grayscale;
+                        break;
+                    case GLFW_KEY_F5:
+                        if (!ProgramState::sharpenKernel)
+                            m_DisableAllPostProcessingEffects();
+                        ProgramState::sharpenKernel = !ProgramState::sharpenKernel;
+                        break;
+                    case GLFW_KEY_F6:
+                        if (!ProgramState::blurKernel)
+                            m_DisableAllPostProcessingEffects();
+                        ProgramState::blurKernel = !ProgramState::blurKernel;
+                        break;
+                    case GLFW_KEY_F7:
+                        if (!ProgramState::edgeDetectionKernel)
+                            m_DisableAllPostProcessingEffects();
+                        ProgramState::edgeDetectionKernel = !ProgramState::edgeDetectionKernel;
+                        break;
+                }
             }
         }
     }
 
     m_eventQueue.clear();
+}
+
+void Render::Window::m_DisableAllPostProcessingEffects() {
+    ProgramState::inversion = false;
+    ProgramState::grayscale = false;
+    ProgramState::sharpenKernel = false;
+    ProgramState::blurKernel = false;
+    ProgramState::edgeDetectionKernel = false;
 }

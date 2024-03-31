@@ -66,4 +66,17 @@ namespace Data {
                 1.0f, -1.0f,  1.0f
         };
     };
+
+    struct FramebufferData {
+        static inline float vertices[24] = {
+                // positions   // texCoords
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                -1.0f, -1.0f,  0.0f, 0.0f,
+                1.0f, -1.0f,  1.0f, 0.0f,
+
+                -1.0f,  1.0f,  0.0f, 1.0f,
+                1.0f, -1.0f,  1.0f, 0.0f,
+                1.0f,  1.0f,  1.0f, 1.0f
+        };
+    };
 }

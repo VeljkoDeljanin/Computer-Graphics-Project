@@ -5,7 +5,6 @@
 #include <glad/glad.h>
 
 #include "Model/Model.h"
-#include "Camera.h"
 
 Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) : m_shader(std::move(shader)) {
     m_SetupForestGround();

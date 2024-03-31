@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model/Model.h"
+#include "Framebuffer.h"
 
 namespace Render {
     class Renderer {
@@ -33,6 +34,7 @@ namespace Render {
         Window &m_window;
         GuiWindow &m_guiWindow;
         Camera &m_camera;
+        Framebuffer &m_framebuffer;
 
         void m_UpdateWindows();
 
