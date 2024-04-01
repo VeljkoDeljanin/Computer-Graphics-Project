@@ -12,7 +12,7 @@
 namespace Render {
     class Model {
     public:
-        Model(const std::string &path);
+        explicit Model(const std::string &path);
         ~Model();
 
         void Draw(Shader &shader);

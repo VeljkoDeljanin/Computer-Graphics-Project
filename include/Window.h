@@ -36,6 +36,6 @@ namespace Render {
         std::vector<Controllers::Event> m_eventQueue;
 
         void m_ProcessInput();
-        static void m_DisableAllPostProcessingEffects();
+        static void m_DisableAllKernelEffects();
     };
 }

@@ -58,6 +58,7 @@ void Render::Renderer::Update() {
 
     m_camera.Update(m_deltaTime);
 
+    glViewport(0, 0, Data::FramebufferData::framebufferWidth, Data::FramebufferData::framebufferHeight);
     m_framebuffer.Bind();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -65,6 +66,7 @@ void Render::Renderer::Update() {
 
     Controllers::ServiceLocator::GetInstance().GetEntityController().Update();
 
+    glViewport(0, 0, Data::WindowData::screenWidth, Data::WindowData::screenHeight);
     m_framebuffer.Unbind();
 
     m_UpdateWindows();

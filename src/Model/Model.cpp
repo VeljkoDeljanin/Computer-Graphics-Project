@@ -91,8 +91,8 @@ Render::Mesh Render::Model::m_ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
     m_LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", textures);
     m_LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular", textures);
-    m_LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal", textures);
-    m_LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height", textures);
+    m_LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal", textures);
+    m_LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height", textures);
 
     return {vertices, indices, textures};
 }

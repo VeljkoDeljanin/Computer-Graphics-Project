@@ -31,20 +31,19 @@ void Render::Framebuffer::Init() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer);
 
     glGenTextures(1, &m_textureColorBuffer);
-    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Data::WindowData::screenWidth,
-                 Data::WindowData::screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textureColorBuffer);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, Data::FramebufferData::framebufferWidth,
+                            Data::FramebufferData::framebufferHeight, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureColorBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_textureColorBuffer, 0);
 
     glGenRenderbuffers(1, &RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
-                          Data::WindowData::screenWidth, Data::WindowData::screenHeight);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8,
+                                     Data::FramebufferData::framebufferWidth, Data::FramebufferData::framebufferHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
@@ -75,15 +74,19 @@ void Render::Framebuffer::Unbind() {
 
     m_shader->ActivateShader();
 
-    m_shader->SetBool("inversionEnabled", ProgramState::inversion);
+    m_shader->SetInt("framebufferWidth", Data::FramebufferData::framebufferWidth);
+    m_shader->SetInt("framebufferHeight", Data::FramebufferData::framebufferHeight);
+
     m_shader->SetBool("grayscaleEnabled", ProgramState::grayscale);
 
     m_shader->SetBool("sharpenKernelEnabled", ProgramState::sharpenKernel);
     m_shader->SetBool("blurKernelEnabled", ProgramState::blurKernel);
     m_shader->SetBool("edgeDetectionKernelEnabled", ProgramState::edgeDetectionKernel);
+    m_shader->SetBool("embossKernelEnabled", ProgramState::embossKernel);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textureColorBuffer);
+
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 

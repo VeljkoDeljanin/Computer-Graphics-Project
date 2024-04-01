@@ -3,32 +3,28 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D screenTexture;
+uniform sampler2DMS screenTexture;
 
-uniform bool inversionEnabled;
+uniform int framebufferWidth;
+uniform int framebufferHeight;
+
 uniform bool grayscaleEnabled;
 
 uniform bool sharpenKernelEnabled;
 uniform bool blurKernelEnabled;
 uniform bool edgeDetectionKernelEnabled;
+uniform bool embossKernelEnabled;
 
-const float offset = 1.0f / 300.0f;
-vec2 offsets[9] = vec2[](
-    vec2(-offset,  offset), // top-left
-    vec2( 0.0f,    offset), // top-center
-    vec2( offset,  offset), // top-right
-    vec2(-offset,  0.0f),   // center-left
-    vec2( 0.0f,    0.0f),   // center-center
-    vec2( offset,  0.0f),   // center-right
-    vec2(-offset, -offset), // bottom-left
-    vec2( 0.0f,   -offset), // bottom-center
-    vec2( offset, -offset)  // bottom-right
-);
-
-float identityKernel[9] = float[](
-    0, 0, 0,
-    0, 1, 0,
-    0, 0, 0
+ivec2 offsets[9] = ivec2[](
+    ivec2(-1,  1), // top-left
+    ivec2( 0,  1), // top-center
+    ivec2( 1,  1), // top-right
+    ivec2(-1,  0), // center-left
+    ivec2( 0,  0), // center-center
+    ivec2( 1,  0), // center-right
+    ivec2(-1, -1), // bottom-left
+    ivec2( 0, -1), // bottom-center
+    ivec2( 1, -1)  // bottom-right
 );
 
 float sharpenKernel[9] = float[](
@@ -49,6 +45,18 @@ float edgeDetectionKernel[9] = float[](
     1,  1,  1
 );
 
+float embossKernel[9] = float[](
+    -2, -1,  0,
+    -1,  1,  1,
+     0,  1,  2
+);
+
+float identityKernel[9] = float[](
+    0, 0, 0,
+    0, 1, 0,
+    0, 0, 0
+);
+
 vec3 CalculateColor(float[9] kernel);
 
 void main() {
@@ -60,13 +68,8 @@ void main() {
         color = CalculateColor(blurKernel);
     else if (edgeDetectionKernelEnabled)
         color = CalculateColor(edgeDetectionKernel);
-    else if (inversionEnabled)
-        color = vec3(1.0f - texture(screenTexture, TexCoords));
-    else if (grayscaleEnabled) {
-        vec4 texColor = texture(screenTexture, TexCoords);
-        float avg = 0.2126 * texColor.r + 0.7152 * texColor.g + 0.0722 * texColor.b;
-        color = vec3(avg);
-    }
+    else if (embossKernelEnabled)
+        color = CalculateColor(embossKernel);
     else
         color = CalculateColor(identityKernel);
 
@@ -74,21 +77,22 @@ void main() {
 }
 
 vec3 CalculateColor(float[9] kernel) {
+    ivec2 viewportDim = ivec2(framebufferWidth, framebufferHeight);
+    ivec2 coords = ivec2(viewportDim * TexCoords);
+
     vec3 sampleTex[9];
     for (int i = 0; i < 9; i++) {
-#if 0
-        if (inversionEnabled)
-            sampleTex[i] = vec3(1.0f - texture(screenTexture, TexCoords));
-        else if (grayscaleEnabled) {
-            vec4 texColor = texture(screenTexture, TexCoords);
-            float avg = 0.2126 * texColor.r + 0.7152 * texColor.g + 0.0722 * texColor.b;
-            sampleTex[i] = vec3(avg);
+        vec3 sample0 = texelFetch(screenTexture, coords + offsets[i], 0).rgb;
+        vec3 sample1 = texelFetch(screenTexture, coords + offsets[i], 1).rgb;
+        vec3 sample2 = texelFetch(screenTexture, coords + offsets[i], 2).rgb;
+        vec3 sample3 = texelFetch(screenTexture, coords + offsets[i], 3).rgb;
+
+        sampleTex[i] = 0.25f * (sample0 + sample1 + sample2 + sample3);
+
+        if (grayscaleEnabled) {
+            float grayscale = 0.2126f * sampleTex[i].r + 0.7152f * sampleTex[i].g + 0.0722f * sampleTex[i].b;
+            sampleTex[i] = vec3(grayscale);
         }
-        else
-            sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-#else
-        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-#endif
     }
 
     vec3 color = vec3(0.0f);

@@ -78,5 +78,8 @@ namespace Data {
                 1.0f, -1.0f,  1.0f, 0.0f,
                 1.0f,  1.0f,  1.0f, 1.0f
         };
+
+        static inline int framebufferWidth = 1600;
+        static inline int framebufferHeight = 900;
     };
 }

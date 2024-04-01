@@ -14,11 +14,6 @@ Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) : m_shader(std:
     m_forestSpecMap = Render::TextureFromFile("forest_spec.jpg", "resources/textures/forest_ground");
     m_cobblestoneDiffMap = Render::TextureFromFile("cobblestone_diff.png", "resources/textures/cobblestone_ground");
     m_cobblestoneSpecMap = Render::TextureFromFile("cobblestone_spec.png", "resources/textures/cobblestone_ground");
-
-    m_shader->ActivateShader();
-    m_shader->SetInt("material.texture_diffuse1", 0);
-    m_shader->SetInt("material.texture_specular1", 1);
-    m_shader->DeactivateShader();
 }
 
 Entities::Ground::~Ground() {

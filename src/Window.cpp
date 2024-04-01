@@ -46,7 +46,9 @@ GLFWwindow *Render::Window::GetGlfwWindow() {
 }
 
 void Render::Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height); (void) window;
+    Data::WindowData::screenWidth = width;
+    Data::WindowData::screenHeight = height;
+    (void) window;
 }
 
 Render::Window::Window() {
@@ -67,29 +69,34 @@ void Render::Window::m_ProcessInput() {
                         ProgramState::VSync = !ProgramState::VSync;
                         break;
                     case GLFW_KEY_F3:
-                        if (!ProgramState::inversion)
-                            m_DisableAllPostProcessingEffects();
-                        ProgramState::inversion = !ProgramState::inversion;
+                        ProgramState::antiAliasing = !ProgramState::antiAliasing;
+                        if (ProgramState::antiAliasing)
+                            glEnable(GL_MULTISAMPLE);
+                        else
+                            glDisable(GL_MULTISAMPLE);
                         break;
                     case GLFW_KEY_F4:
-                        if (!ProgramState::grayscale)
-                            m_DisableAllPostProcessingEffects();
                         ProgramState::grayscale = !ProgramState::grayscale;
                         break;
                     case GLFW_KEY_F5:
                         if (!ProgramState::sharpenKernel)
-                            m_DisableAllPostProcessingEffects();
+                            m_DisableAllKernelEffects();
                         ProgramState::sharpenKernel = !ProgramState::sharpenKernel;
                         break;
                     case GLFW_KEY_F6:
                         if (!ProgramState::blurKernel)
-                            m_DisableAllPostProcessingEffects();
+                            m_DisableAllKernelEffects();
                         ProgramState::blurKernel = !ProgramState::blurKernel;
                         break;
                     case GLFW_KEY_F7:
                         if (!ProgramState::edgeDetectionKernel)
-                            m_DisableAllPostProcessingEffects();
+                            m_DisableAllKernelEffects();
                         ProgramState::edgeDetectionKernel = !ProgramState::edgeDetectionKernel;
+                        break;
+                    case GLFW_KEY_F8:
+                        if (!ProgramState::embossKernel)
+                            m_DisableAllKernelEffects();
+                        ProgramState::embossKernel = !ProgramState::embossKernel;
                         break;
                 }
             }
@@ -99,10 +106,9 @@ void Render::Window::m_ProcessInput() {
     m_eventQueue.clear();
 }
 
-void Render::Window::m_DisableAllPostProcessingEffects() {
-    ProgramState::inversion = false;
-    ProgramState::grayscale = false;
+void Render::Window::m_DisableAllKernelEffects() {
     ProgramState::sharpenKernel = false;
     ProgramState::blurKernel = false;
     ProgramState::edgeDetectionKernel = false;
+    ProgramState::embossKernel = false;
 }
