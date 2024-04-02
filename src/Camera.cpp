@@ -121,7 +121,7 @@ void Render::Camera::ProcessMouseScroll(float yoffset) {
         Zoom = 45.0f;
 }
 
-Render::Camera::Camera() : Position(glm::vec3(0.0f, 1.0f, -11.0f)), WorldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
+Render::Camera::Camera() : Position(glm::vec3(0.0f, 1.0f, -12.5f)), WorldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
                            Front(glm::vec3(0.0f, 0.0f, 1.0f)) {
     Controllers::ServiceLocator::GetInstance().GetEventController().SubscribeToEvent(
             Controllers::EventType::Keyboard, this
