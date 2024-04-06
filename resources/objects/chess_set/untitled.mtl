@@ -1,0 +1,35 @@
+# Blender 4.1.0 MTL File: 'None'
+# www.blender.org
+
+newmtl chess_set_board
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd chess_set_board_diff_4k.jpg
+map_bump -bm 1.000000 chess_set_board_nor_gl_4k.jpg
+
+newmtl chess_set_pieces_black
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd chess_set_pieces_black_diff_4k.jpg
+map_bump -bm 1.000000 chess_set_pieces_black_nor_gl_4k.jpg
+
+newmtl chess_set_pieces_white
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd chess_set_pieces_white_diff_4k.jpg
+map_bump -bm 1.000000 chess_set_pieces_white_nor_gl_4k.jpg

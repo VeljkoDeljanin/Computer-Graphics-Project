@@ -3,13 +3,16 @@
 #include "Camera.h"
 #include "ProgramState.h"
 
-Entities::Light::Light(std::shared_ptr<Render::Shader> shader)
-: m_shader(std::move(shader)) {
+Entities::Light::Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2)
+: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)) {
 
 }
 
 void Entities::Light::Update() {
+    m_hasNormalMap = false;
     m_UpdateShader(m_shader);
+    m_hasNormalMap = true;
+    m_UpdateShader(m_normalMapShader);
 }
 
 void Entities::Light::m_UpdateShader(const std::shared_ptr<Render::Shader>& shader) {
@@ -17,6 +20,9 @@ void Entities::Light::m_UpdateShader(const std::shared_ptr<Render::Shader>& shad
 
     shader->SetVec3("viewPosition", Render::Camera::GetInstance().GetPosition());
     shader->SetFloat("material.shininess", 32.0f);
+
+    if (m_hasNormalMap)
+        shader->SetVec3("viewPos", Render::Camera::GetInstance().GetPosition());
 
     m_UpdateDirLight(shader);
     m_UpdatePointsLights(shader);
@@ -26,6 +32,9 @@ void Entities::Light::m_UpdateShader(const std::shared_ptr<Render::Shader>& shad
 }
 
 void Entities::Light::m_UpdateDirLight(const std::shared_ptr<Render::Shader>& shader) {
+    if (m_hasNormalMap)
+        shader->SetVec3("lightDir[0]", glm::vec3(-0.35f, -0.6f, -1.0f));
+
     shader->SetVec3("dirLight.direction", glm::vec3(-0.35f, -0.6f, -1.0f));
 
     shader->SetVec3("dirLight.ambient", glm::vec3(0.1f));
@@ -35,11 +44,14 @@ void Entities::Light::m_UpdateDirLight(const std::shared_ptr<Render::Shader>& sh
 
 void Entities::Light::m_UpdatePointsLights(const std::shared_ptr<Render::Shader> &shader) const {
     for (unsigned int i = 0; i < m_pointLightPositions.size(); i++) {
+        if (m_hasNormalMap)
+            shader->SetVec3("lightPos[" + std::to_string(i) + "]", m_pointLightPositions[i]);
+
         shader->SetVec3("pointLights[" + std::to_string(i) + "].position", m_pointLightPositions[i]);
 
         shader->SetFloat("pointLights[" + std::to_string(i) + "].constant", 1.0f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.7f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 1.8f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.35f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.44f);
 
         shader->SetVec3("pointLights[" + std::to_string(i) + "].ambient", glm::vec3(0.5f));
         shader->SetVec3("pointLights[" + std::to_string(i) + "].diffuse", glm::vec3(0.8f));
@@ -48,6 +60,11 @@ void Entities::Light::m_UpdatePointsLights(const std::shared_ptr<Render::Shader>
 }
 
 void Entities::Light::m_UpdateSpotLight(const std::shared_ptr<Render::Shader>& shader) {
+    if (m_hasNormalMap) {
+        shader->SetVec3("lightPos[6]", Render::Camera::GetInstance().GetPosition());
+        shader->SetVec3("lightDir[1]", Render::Camera::GetInstance().GetFront());
+    }
+
     shader->SetVec3("spotLight.position", Render::Camera::GetInstance().GetPosition());
     shader->SetVec3("spotLight.direction", Render::Camera::GetInstance().GetFront());
     shader->SetFloat("spotLight.cutOff", glm::cos(glm::radians(10.0f)));

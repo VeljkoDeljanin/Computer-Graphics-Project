@@ -21,13 +21,14 @@ void Controllers::EntityController::Clear() {
 }
 
 void Controllers::EntityController::m_InitEntities() {
-    m_entities.push_back(std::make_unique<Entities::Light>(m_shaders["entity"]));
-    m_entities.push_back(std::make_unique<Entities::Model3D>(m_shaders["entity"]));
-    m_entities.push_back(std::make_unique<Entities::Ground>(m_shaders["entity"]));
+    m_entities.push_back(std::make_unique<Entities::Light>(m_shaders["entity"], m_shaders["normalMapEntity"]));
+    m_entities.push_back(std::make_unique<Entities::Model3D>(m_shaders["entity"], m_shaders["normalMapEntity"]));
+    m_entities.push_back(std::make_unique<Entities::Ground>(m_shaders["normalMapEntity"]));
     m_entities.push_back(std::make_unique<Entities::Skybox>(m_shaders["skybox"]));
 }
 
 void Controllers::EntityController::m_InitShaders() {
-    m_shaders["entity"] = std::make_shared<Render::Shader>("resources/shaders/entityShader.vs", "resources/shaders/entityShader.fs");
+    m_shaders["entity"] = std::make_shared<Render::Shader>("resources/shaders/entity.vs", "resources/shaders/entity.fs");
+    m_shaders["normalMapEntity"] = std::make_shared<Render::Shader>("resources/shaders/normalMapEntity.vs", "resources/shaders/normalMapEntity.fs");
     m_shaders["skybox"] = std::make_shared<Render::Shader>("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
 }

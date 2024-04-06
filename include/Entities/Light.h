@@ -6,12 +6,15 @@ namespace Entities {
     class Light : public Entity {
     public:
 
-        explicit Light(std::shared_ptr<Render::Shader> shader);
+        explicit Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2);
         ~Light() override = default;
 
         void Update() override;
     private:
         std::shared_ptr<Render::Shader> m_shader;
+        std::shared_ptr<Render::Shader> m_normalMapShader;
+
+        static inline bool m_hasNormalMap = false;
 
         std::array<glm::vec3, 6> m_pointLightPositions {
                 glm::vec3(-1.7f, 2.4f, -8.0f),

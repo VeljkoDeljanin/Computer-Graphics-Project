@@ -16,13 +16,13 @@ namespace Entities {
         glm::mat4 view{};
         glm::mat4 projection{};
 
-        unsigned int m_forestVAO{}, m_forestVBO{}, m_forestEBO{};
-        unsigned int m_cobblestoneVAO{}, m_cobblestoneVBO{}, m_cobblestoneEBO{};
+        unsigned int m_grassVAO{}, m_grassVBO{};
+        unsigned int m_cobblestoneVAO{}, m_cobblestoneVBO{};
 
-        unsigned int m_forestDiffMap{}, m_forestSpecMap{};
-        unsigned int m_cobblestoneDiffMap{}, m_cobblestoneSpecMap{};
+        unsigned int m_grassDiffMap{}, m_grassSpecMap{}, m_grassNormMap{};
+        unsigned int m_cobblestoneDiffMap{}, m_cobblestoneSpecMap{}, m_cobblestoneNormMap{};
 
-        void m_SetupForestGround();
+        void m_SetupGrassGround();
         void m_SetupCobblestoneGround();
     };
 }
