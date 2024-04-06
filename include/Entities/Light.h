@@ -6,13 +6,15 @@ namespace Entities {
     class Light : public Entity {
     public:
 
-        explicit Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2);
+        explicit Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2,
+                       std::shared_ptr<Render::Shader> shader3);
         ~Light() override = default;
 
         void Update() override;
     private:
         std::shared_ptr<Render::Shader> m_shader;
         std::shared_ptr<Render::Shader> m_normalMapShader;
+        std::shared_ptr<Render::Shader> m_normalAndHeightMapShader;
 
         static inline bool m_hasNormalMap = false;
 

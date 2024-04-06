@@ -1,6 +1,7 @@
 #include "Entities/Model3D.h"
 
 #include "Camera.h"
+#include "ProgramState.h"
 
 Entities::Model3D::Model3D(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2)
 : m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)),
@@ -41,10 +42,7 @@ void Entities::Model3D::m_UpdateShader(const std::shared_ptr<Render::Shader> &sh
                                             0.1f, 100.0f));
     shader->SetMat4("projection", projection);
 
-    if (m_hasNormalMap) {
-        m_UpdateFlashlight(shader);
-    }
-    else {
+    if (!m_hasNormalMap) {
         m_UpdateBigChessSet(shader);
         m_UpdateTableChairSet(shader);
         m_UpdateStreetLamp(shader);
@@ -52,7 +50,13 @@ void Entities::Model3D::m_UpdateShader(const std::shared_ptr<Render::Shader> &sh
         m_UpdateBillboard(shader);
         m_UpdateTelescope(shader);
         m_UpdateChessSet(shader);
+
+        if (!ProgramState::normalMapping)
+            m_UpdateFlashlight(shader);
     }
+
+    if (m_hasNormalMap && ProgramState::normalMapping)
+        m_UpdateFlashlight(shader);
 
     shader->DeactivateShader();
 }

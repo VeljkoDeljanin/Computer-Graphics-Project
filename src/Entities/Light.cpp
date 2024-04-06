@@ -3,8 +3,9 @@
 #include "Camera.h"
 #include "ProgramState.h"
 
-Entities::Light::Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2)
-: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)) {
+Entities::Light::Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2,
+                       std::shared_ptr<Render::Shader> shader3)
+: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)), m_normalAndHeightMapShader(std::move(shader3)) {
 
 }
 
@@ -13,6 +14,7 @@ void Entities::Light::Update() {
     m_UpdateShader(m_shader);
     m_hasNormalMap = true;
     m_UpdateShader(m_normalMapShader);
+    m_UpdateShader(m_normalAndHeightMapShader);
 }
 
 void Entities::Light::m_UpdateShader(const std::shared_ptr<Render::Shader>& shader) {

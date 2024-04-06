@@ -5,23 +5,41 @@
 #include <glad/glad.h>
 
 #include "Model/Model.h"
+#include "Camera.h"
+#include "ProgramState.h"
 
-Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader) : m_shader(std::move(shader)) {
+Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2,
+                         std::shared_ptr<Render::Shader> shader3)
+: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)), m_normalAndHeightMapShader(std::move(shader3)) {
     m_SetupGrassGround();
     m_SetupCobblestoneGround();
 
     m_grassDiffMap = Render::TextureFromFile("grass_path_diff.png", "resources/textures/grass_ground");
     m_grassSpecMap = Render::TextureFromFile("grass_path_spec.png", "resources/textures/grass_ground");
     m_grassNormMap = Render::TextureFromFile("grass_path_nor.png", "resources/textures/grass_ground");
+    m_grassHeightMap = Render::TextureFromFile("grass_path_disp.png", "resources/textures/grass_ground");
     m_cobblestoneDiffMap = Render::TextureFromFile("cobblestone_diff.png", "resources/textures/cobblestone_ground");
     m_cobblestoneSpecMap = Render::TextureFromFile("cobblestone_spec.png", "resources/textures/cobblestone_ground");
     m_cobblestoneNormMap = Render::TextureFromFile("cobblestone_nor.png", "resources/textures/cobblestone_ground");
+    m_cobblestoneHeightMap = Render::TextureFromFile("cobblestone_disp.png", "resources/textures/cobblestone_ground");
 
     m_shader->ActivateShader();
     m_shader->SetInt("material.texture_diffuse1", 0);
     m_shader->SetInt("material.texture_specular1", 1);
-    m_shader->SetInt("material.texture_normal1", 2);
     m_shader->DeactivateShader();
+
+    m_normalMapShader->ActivateShader();
+    m_normalMapShader->SetInt("material.texture_diffuse1", 0);
+    m_normalMapShader->SetInt("material.texture_specular1", 1);
+    m_normalMapShader->SetInt("material.texture_normal1", 2);
+    m_normalMapShader->DeactivateShader();
+
+    m_normalAndHeightMapShader->ActivateShader();
+    m_normalAndHeightMapShader->SetInt("material.texture_diffuse1", 0);
+    m_normalAndHeightMapShader->SetInt("material.texture_specular1", 1);
+    m_normalAndHeightMapShader->SetInt("material.texture_normal1", 2);
+    m_normalAndHeightMapShader->SetInt("material.texture_height1", 3);
+    m_normalAndHeightMapShader->DeactivateShader();
 }
 
 Entities::Ground::~Ground() {
@@ -33,18 +51,45 @@ Entities::Ground::~Ground() {
 
 void Entities::Ground::Update() {
     glCullFace(GL_FRONT);
-    m_shader->ActivateShader();
+    if (ProgramState::parallaxMapping)
+        m_UpdateShader(m_normalAndHeightMapShader);
+    else if (ProgramState::normalMapping)
+        m_UpdateShader(m_normalMapShader);
+    else
+        m_UpdateShader(m_shader);
+    glCullFace(GL_BACK);
+}
+
+void Entities::Ground::m_UpdateShader(const std::shared_ptr<Render::Shader> &shader) {
+    shader->ActivateShader();
+
+    view = Render::Camera::GetInstance().GetViewMatrix();
+    shader->SetMat4("view", view);
+
+    projection = glm::mat4(glm::perspective(glm::radians(Render::Camera::GetInstance().GetZoom()),
+                                            static_cast<float>(Data::WindowData::screenWidth) / static_cast<float>(Data::WindowData::screenHeight),
+                                            0.1f, 100.0f));
+    shader->SetMat4("projection", projection);
 
     model = glm::mat4(1.0f);
-    m_shader->SetMat4("model", model);
+    shader->SetMat4("model", model);
+
+    if (ProgramState::parallaxMapping)
+        shader->SetFloat("heightScale", 0.1f);
 
     // Forest ground
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_grassDiffMap);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, m_grassSpecMap);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, m_grassNormMap);
+    if (ProgramState::normalMapping) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, m_grassNormMap);
+    }
+    if (ProgramState::parallaxMapping) {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, m_grassHeightMap);
+    }
     glBindVertexArray(m_grassVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -53,14 +98,19 @@ void Entities::Ground::Update() {
     glBindTexture(GL_TEXTURE_2D, m_cobblestoneDiffMap);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, m_cobblestoneSpecMap);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, m_cobblestoneNormMap);
+    if (ProgramState::normalMapping) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, m_cobblestoneNormMap);
+    }
+    if (ProgramState::parallaxMapping) {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, m_cobblestoneHeightMap);
+    }
     glBindVertexArray(m_cobblestoneVAO);
     glDrawArrays(GL_TRIANGLES, 0, 12);
     glBindVertexArray(0);
 
-    m_shader->DeactivateShader();
-    glCullFace(GL_BACK);
+    shader->DeactivateShader();
 }
 
 void Entities::Ground::m_SetupGrassGround() {
@@ -90,10 +140,12 @@ void Entities::Ground::m_SetupGrassGround() {
     tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent1 = glm::normalize(tangent1);
 
     bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent1 = glm::normalize(bitangent1);
 
     // triangle 2
     edge1 = pos3 - pos1;
@@ -106,10 +158,12 @@ void Entities::Ground::m_SetupGrassGround() {
     tangent2.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent2.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent2.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent2 = glm::normalize(tangent2);
 
     bitangent2.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent2.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent2.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent2 = glm::normalize(bitangent2);
 
     float vertices[] = {
             // positions            // normal         // texcoords  // tangent                          // bitangent
@@ -185,10 +239,12 @@ void Entities::Ground::m_SetupCobblestoneGround() {
     tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent1 = glm::normalize(tangent1);
 
     bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent1 = glm::normalize(bitangent1);
 
     // triangle 2
     edge1 = pos3 - pos1;
@@ -201,10 +257,12 @@ void Entities::Ground::m_SetupCobblestoneGround() {
     tangent2.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent2.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent2.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent2 = glm::normalize(tangent2);
 
     bitangent2.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent2.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent2.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent2 = glm::normalize(bitangent2);
 
     // triangle 3
     edge1 = pos6 - pos5;
@@ -217,10 +275,12 @@ void Entities::Ground::m_SetupCobblestoneGround() {
     tangent3.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent3.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent3.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent3 = glm::normalize(tangent3);
 
     bitangent3.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent3.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent3.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent3 = glm::normalize(bitangent3);
 
     // triangle 4
     edge1 = pos7 - pos5;
@@ -233,10 +293,12 @@ void Entities::Ground::m_SetupCobblestoneGround() {
     tangent4.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
     tangent4.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
     tangent4.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+    tangent4 = glm::normalize(tangent4);
 
     bitangent4.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
     bitangent4.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
     bitangent4.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    bitangent4 = glm::normalize(bitangent4);
 
     float vertices[] = {
             // positions            // normal         // texcoords  // tangent                          // bitangent
@@ -252,9 +314,9 @@ void Entities::Ground::m_SetupCobblestoneGround() {
             pos6.x, pos6.y, pos6.z, nm.x, nm.y, nm.z, uv6.x, uv6.y, tangent3.x, tangent3.y, tangent3.z, bitangent3.x, bitangent3.y, bitangent3.z,
             pos7.x, pos7.y, pos7.z, nm.x, nm.y, nm.z, uv7.x, uv7.y, tangent3.x, tangent3.y, tangent3.z, bitangent3.x, bitangent3.y, bitangent3.z,
 
-            pos5.x, pos5.y, pos5.z, nm.x, nm.y, nm.z, uv5.x, uv5.y, tangent3.x, tangent3.y, tangent3.z, bitangent3.x, bitangent3.y, bitangent3.z,
-            pos7.x, pos7.y, pos7.z, nm.x, nm.y, nm.z, uv7.x, uv7.y, tangent3.x, tangent3.y, tangent3.z, bitangent3.x, bitangent3.y, bitangent3.z,
-            pos8.x, pos8.y, pos8.z, nm.x, nm.y, nm.z, uv8.x, uv8.y, tangent3.x, tangent3.y, tangent3.z, bitangent3.x, bitangent3.y, bitangent3.z
+            pos5.x, pos5.y, pos5.z, nm.x, nm.y, nm.z, uv5.x, uv5.y, tangent4.x, tangent4.y, tangent4.z, bitangent4.x, bitangent4.y, bitangent4.z,
+            pos7.x, pos7.y, pos7.z, nm.x, nm.y, nm.z, uv7.x, uv7.y, tangent4.x, tangent4.y, tangent4.z, bitangent4.x, bitangent4.y, bitangent4.z,
+            pos8.x, pos8.y, pos8.z, nm.x, nm.y, nm.z, uv8.x, uv8.y, tangent4.x, tangent4.y, tangent4.z, bitangent4.x, bitangent4.y, bitangent4.z
     };
 
     // configure VAO

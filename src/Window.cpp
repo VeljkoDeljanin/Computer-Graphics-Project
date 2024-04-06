@@ -98,6 +98,15 @@ void Render::Window::m_ProcessInput() {
                             m_DisableAllKernelEffects();
                         ProgramState::embossKernel = !ProgramState::embossKernel;
                         break;
+                    case GLFW_KEY_O:
+                        if (ProgramState::normalMapping)
+                            ProgramState::parallaxMapping = false;
+                        ProgramState::normalMapping = !ProgramState::normalMapping;
+                        break;
+                    case GLFW_KEY_P:
+                        if (ProgramState::normalMapping)
+                            ProgramState::parallaxMapping = !ProgramState::parallaxMapping;
+                        break;
                 }
             }
         }

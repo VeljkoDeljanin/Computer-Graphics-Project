@@ -13,4 +13,7 @@ struct ProgramState {
     static inline bool embossKernel = false;
 
     static inline bool antiAliasing = true;
+
+    static inline bool normalMapping = true;
+    static inline bool parallaxMapping = true;
 };
