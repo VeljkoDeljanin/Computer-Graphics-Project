@@ -114,10 +114,10 @@ void Entities::Ground::m_UpdateShader(const std::shared_ptr<Render::Shader> &sha
 }
 
 void Entities::Ground::m_SetupGrassGround() {
-    glm::vec3 pos1(10.0f,  0.0f, -15.0f);
-    glm::vec3 pos2(10.0f, 0.0f, 10.0f);
-    glm::vec3 pos3(-10.0f, 0.0f, 10.0f);
-    glm::vec3 pos4(-10.0f,  0.0f, -15.0f);
+    glm::vec3 pos1(15.0f,  0.0f, -15.0f);
+    glm::vec3 pos2(15.0f, 0.0f, 15.0f);
+    glm::vec3 pos3(-15.0f, 0.0f, 15.0f);
+    glm::vec3 pos4(-15.0f,  0.0f, -15.0f);
 
     glm::vec2 uv1(10.0f, 10.0f);
     glm::vec2 uv2(10.0f, 0.0f);

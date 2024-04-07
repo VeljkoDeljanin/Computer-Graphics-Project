@@ -15,11 +15,12 @@ namespace Render {
         explicit Model(const std::string &path);
         ~Model();
 
+        std::vector<Mesh> meshes;
+        std::unordered_map<std::string, Texture> loadedTexturesMap;
+
         void Draw(Shader &shader);
         void SetShaderTextureNamePrefix(const std::string &path);
     private:
-        std::vector<Mesh> m_meshes;
-        std::unordered_map<std::string, Texture> m_loadedTexturesMap;
         std::string m_directory;
 
         void m_LoadModel(const std::string &path);

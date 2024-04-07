@@ -9,17 +9,17 @@ Render::Model::Model(const std::string &path) {
 }
 
 Render::Model::~Model() {
-    for (Mesh &mesh : m_meshes)
+    for (Mesh &mesh : meshes)
         mesh.Delete();
 }
 
 void Render::Model::Draw(Render::Shader &shader) {
-    for (auto &mesh : m_meshes)
+    for (auto &mesh : meshes)
         mesh.Draw(shader);
 }
 
 void Render::Model::SetShaderTextureNamePrefix(const std::string &path) {
-    for(auto &mesh : m_meshes)
+    for(auto &mesh : meshes)
         mesh.SetGlslIdentifierPrefix(path);
 }
 
@@ -38,7 +38,7 @@ void Render::Model::m_LoadModel(const std::string &path) {
 void Render::Model::m_ProcessNode(aiNode *node, const aiScene *scene) {
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        m_meshes.push_back(m_ProcessMesh(mesh, scene));
+        meshes.push_back(m_ProcessMesh(mesh, scene));
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -104,8 +104,8 @@ void Render::Model::m_LoadMaterialTextures(aiMaterial *mat, aiTextureType type, 
         mat->GetTexture(type, i, &str);
 
         bool skip = false;
-        auto it = m_loadedTexturesMap.find(str.C_Str());
-        if (it != m_loadedTexturesMap.end()) {
+        auto it = loadedTexturesMap.find(str.C_Str());
+        if (it != loadedTexturesMap.end()) {
             textures.push_back(it->second);
             skip = true;
         }
@@ -116,7 +116,7 @@ void Render::Model::m_LoadMaterialTextures(aiMaterial *mat, aiTextureType type, 
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
-            m_loadedTexturesMap[str.C_Str()] = texture;
+            loadedTexturesMap[str.C_Str()] = texture;
         }
     }
 }

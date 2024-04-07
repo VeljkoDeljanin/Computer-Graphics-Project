@@ -29,6 +29,8 @@ namespace Render {
         Mesh(std::vector<Vertex> &vs, std::vector<unsigned int> &ind,
              std::vector<Texture> &tex);
 
+        unsigned int VAO{};
+
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture> textures;
@@ -38,7 +40,7 @@ namespace Render {
 
         void Delete();
     private:
-        unsigned int VAO{}, VBO{}, EBO{};
+        unsigned int VBO{}, EBO{};
         std::string m_glslIdentifierPrefix;
 
         void m_SetupMesh();

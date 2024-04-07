@@ -4,14 +4,16 @@
 #include "ProgramState.h"
 
 Entities::Light::Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2,
-                       std::shared_ptr<Render::Shader> shader3)
-: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)), m_normalAndHeightMapShader(std::move(shader3)) {
+                       std::shared_ptr<Render::Shader> shader3, std::shared_ptr<Render::Shader> shader4)
+: m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)),
+  m_normalAndHeightMapShader(std::move(shader3)), m_instancingShader(std::move(shader4)) {
 
 }
 
 void Entities::Light::Update() {
     m_hasNormalMap = false;
     m_UpdateShader(m_shader);
+    m_UpdateShader(m_instancingShader);
     m_hasNormalMap = true;
     m_UpdateShader(m_normalMapShader);
     m_UpdateShader(m_normalAndHeightMapShader);

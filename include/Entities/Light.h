@@ -7,7 +7,7 @@ namespace Entities {
     public:
 
         explicit Light(std::shared_ptr<Render::Shader> shader, std::shared_ptr<Render::Shader> shader2,
-                       std::shared_ptr<Render::Shader> shader3);
+                       std::shared_ptr<Render::Shader> shader3, std::shared_ptr<Render::Shader> shader4);
         ~Light() override = default;
 
         void Update() override;
@@ -15,16 +15,17 @@ namespace Entities {
         std::shared_ptr<Render::Shader> m_shader;
         std::shared_ptr<Render::Shader> m_normalMapShader;
         std::shared_ptr<Render::Shader> m_normalAndHeightMapShader;
+        std::shared_ptr<Render::Shader> m_instancingShader;
 
         static inline bool m_hasNormalMap = false;
 
         std::array<glm::vec3, 6> m_pointLightPositions {
-                glm::vec3(-1.7f, 2.4f, -8.0f),
-                glm::vec3(1.7f, 2.4f, -11.0f),
-                glm::vec3(4.5f, 2.4f, 4.5f),
-                glm::vec3(4.5f, 2.4f, -4.5f),
-                glm::vec3(-4.5f, 2.4f, 4.5f),
-                glm::vec3(-4.5f, 2.4f, -4.5f)
+            glm::vec3(-1.7f, 2.4f, -8.0f),
+            glm::vec3(1.7f, 2.4f, -11.0f),
+            glm::vec3(4.5f, 2.4f, 4.5f),
+            glm::vec3(4.5f, 2.4f, -4.5f),
+            glm::vec3(-4.5f, 2.4f, 4.5f),
+            glm::vec3(-4.5f, 2.4f, -4.5f)
         };
 
         void m_UpdateShader(const std::shared_ptr<Render::Shader>& shader);

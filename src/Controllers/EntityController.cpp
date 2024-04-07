@@ -22,8 +22,9 @@ void Controllers::EntityController::Clear() {
 
 void Controllers::EntityController::m_InitEntities() {
     m_entities.push_back(std::make_unique<Entities::Light>(m_shaders["entity"], m_shaders["normalMapEntity"],
-                                                           m_shaders["normalAndHeightMapEntity"]));
-    m_entities.push_back(std::make_unique<Entities::Model3D>(m_shaders["entity"], m_shaders["normalMapEntity"]));
+                                                           m_shaders["normalAndHeightMapEntity"], m_shaders["instancedEntity"]));
+    m_entities.push_back(std::make_unique<Entities::Model3D>(m_shaders["entity"], m_shaders["normalMapEntity"],
+                                                             m_shaders["instancedEntity"]));
     m_entities.push_back(std::make_unique<Entities::Ground>(m_shaders["entity"], m_shaders["normalMapEntity"],
                                                             m_shaders["normalAndHeightMapEntity"]));
     m_entities.push_back(std::make_unique<Entities::Skybox>(m_shaders["skybox"]));
@@ -38,4 +39,6 @@ void Controllers::EntityController::m_InitShaders() {
                                                                              "resources/shaders/normalAndHeightMapEntity.fs");
     m_shaders["skybox"]                   = std::make_shared<Render::Shader>("resources/shaders/skybox.vs",
                                                                              "resources/shaders/skybox.fs");
+    m_shaders["instancedEntity"]          = std::make_shared<Render::Shader>("resources/shaders/instancedEntity.vs",
+                                                                             "resources/shaders/entity.fs");
 }
