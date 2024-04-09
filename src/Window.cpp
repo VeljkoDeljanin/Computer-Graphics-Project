@@ -60,7 +60,23 @@ Render::Window::Window() {
 void Render::Window::m_ProcessInput() {
     for (auto& event : m_eventQueue) {
         if (event.eventType == Controllers::EventType::Keyboard) {
-            if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
+            if (event.keyboard.key == GLFW_KEY_Q) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_Q)]
+                    = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
+            else if (event.keyboard.key == GLFW_KEY_E) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_E)]
+                        = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
+            else if (event.keyboard.key == GLFW_KEY_UP) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_ARROW_UP)]
+                        = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
+            else if (event.keyboard.key == GLFW_KEY_DOWN) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_ARROW_DOWN)]
+                        = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
+            else if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
                 switch (event.keyboard.key) {
                     case GLFW_KEY_F:
                         ProgramState::flashlight = !ProgramState::flashlight;
@@ -107,10 +123,17 @@ void Render::Window::m_ProcessInput() {
                         if (ProgramState::normalMapping)
                             ProgramState::parallaxMapping = !ProgramState::parallaxMapping;
                         break;
+                    case GLFW_KEY_H:
+                        ProgramState::hdr = !ProgramState::hdr;
+                        break;
                 }
             }
         }
     }
+
+    for (int key = 0; key < 4; key++)
+        if (m_keysPressedDown[key])
+            m_ProcessKeyPressedDown(static_cast<Keys>(key));
 
     m_eventQueue.clear();
 }
@@ -120,4 +143,33 @@ void Render::Window::m_DisableAllKernelEffects() {
     ProgramState::blurKernel = false;
     ProgramState::edgeDetectionKernel = false;
     ProgramState::embossKernel = false;
+}
+
+void Render::Window::m_ProcessKeyPressedDown(Keys keyPressedDown) {
+    switch (keyPressedDown) {
+        case Keys::KEY_Q:
+            if (ProgramState::exposure > 0.1f)
+                ProgramState::exposure -= 0.005f;
+            else
+                ProgramState::exposure = 0.1f;
+            break;
+        case Keys::KEY_E:
+            if (ProgramState::exposure < 10.0f)
+                ProgramState::exposure += 0.005f;
+            else
+                ProgramState::exposure = 10.0f;
+            break;
+        case Keys::KEY_ARROW_UP:
+            if (ProgramState::heightScale < 0.3f)
+                ProgramState::heightScale += 0.001f;
+            else
+                ProgramState::heightScale = 0.3f;
+            break;
+        case Keys::KEY_ARROW_DOWN:
+            if (ProgramState::heightScale > 0.05f)
+                ProgramState::heightScale -= 0.001f;
+            else
+                ProgramState::heightScale = 0.05f;
+            break;
+    }
 }

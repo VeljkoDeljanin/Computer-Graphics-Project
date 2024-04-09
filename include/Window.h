@@ -6,6 +6,13 @@
 #include "Controllers/EventController.h"
 
 namespace Render {
+    enum class Keys {
+        KEY_Q,
+        KEY_E,
+        KEY_ARROW_UP,
+        KEY_ARROW_DOWN
+    };
+
     class Window : public Controllers::Observer {
     public:
         Window(const Window&) = delete;
@@ -34,8 +41,10 @@ namespace Render {
         static inline GLFWwindow *m_glfwWindow = nullptr;
         bool m_running = false;
         std::vector<Controllers::Event> m_eventQueue;
+        std::array<bool, 4> m_keysPressedDown = {false};
 
         void m_ProcessInput();
         static void m_DisableAllKernelEffects();
+        static void m_ProcessKeyPressedDown(Keys keyPressedDown);
     };
 }

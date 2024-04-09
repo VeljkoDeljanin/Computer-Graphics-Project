@@ -50,14 +50,12 @@ Entities::Ground::~Ground() {
 }
 
 void Entities::Ground::Update() {
-    glCullFace(GL_FRONT);
     if (ProgramState::parallaxMapping)
         m_UpdateShader(m_normalAndHeightMapShader);
     else if (ProgramState::normalMapping)
         m_UpdateShader(m_normalMapShader);
     else
         m_UpdateShader(m_shader);
-    glCullFace(GL_BACK);
 }
 
 void Entities::Ground::m_UpdateShader(const std::shared_ptr<Render::Shader> &shader) {
@@ -75,7 +73,7 @@ void Entities::Ground::m_UpdateShader(const std::shared_ptr<Render::Shader> &sha
     shader->SetMat4("model", model);
 
     if (ProgramState::parallaxMapping)
-        shader->SetFloat("heightScale", 0.1f);
+        shader->SetFloat("heightScale", ProgramState::heightScale);
 
     // Forest ground
     glActiveTexture(GL_TEXTURE0);
@@ -114,10 +112,10 @@ void Entities::Ground::m_UpdateShader(const std::shared_ptr<Render::Shader> &sha
 }
 
 void Entities::Ground::m_SetupGrassGround() {
-    glm::vec3 pos1(15.0f,  0.0f, -15.0f);
-    glm::vec3 pos2(15.0f, 0.0f, 15.0f);
-    glm::vec3 pos3(-15.0f, 0.0f, 15.0f);
-    glm::vec3 pos4(-15.0f,  0.0f, -15.0f);
+    glm::vec3 pos1(-15.0f,  0.0f, -15.0f);
+    glm::vec3 pos2(-15.0f, 0.0f, 15.0f);
+    glm::vec3 pos3(15.0f, 0.0f, 15.0f);
+    glm::vec3 pos4(15.0f,  0.0f, -15.0f);
 
     glm::vec2 uv1(10.0f, 10.0f);
     glm::vec2 uv2(10.0f, 0.0f);
@@ -203,14 +201,14 @@ void Entities::Ground::m_SetupGrassGround() {
 }
 
 void Entities::Ground::m_SetupCobblestoneGround() {
-    glm::vec3 pos1(5.0f,  0.01f, -5.0f);
-    glm::vec3 pos2(5.0f, 0.01f, 5.0f);
-    glm::vec3 pos3(-5.0f, 0.01f, 5.0f);
-    glm::vec3 pos4(-5.0f,  0.01f, -5.0f);
-    glm::vec3 pos5(2.0f,  0.01f, -13.0f);
-    glm::vec3 pos6(2.0f, 0.01f, -5.0f);
-    glm::vec3 pos7(-2.0f, 0.01f, -5.0f);
-    glm::vec3 pos8(-2.0f,  0.01f, -13.0f);
+    glm::vec3 pos1(-5.0f,  0.01f, -5.0f);
+    glm::vec3 pos2(-5.0f, 0.01f, 5.0f);
+    glm::vec3 pos3(5.0f, 0.01f, 5.0f);
+    glm::vec3 pos4(5.0f,  0.01f, -5.0f);
+    glm::vec3 pos5(-2.0f,  0.01f, -13.0f);
+    glm::vec3 pos6(-2.0f, 0.01f, -5.0f);
+    glm::vec3 pos7(2.0f, 0.01f, -5.0f);
+    glm::vec3 pos8(2.0f,  0.01f, -13.0f);
 
     glm::vec2 uv1(10.0f, 10.0f);
     glm::vec2 uv2(10.0f, 0.0f);

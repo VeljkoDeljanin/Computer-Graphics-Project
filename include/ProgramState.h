@@ -16,4 +16,8 @@ struct ProgramState {
 
     static inline bool normalMapping = true;
     static inline bool parallaxMapping = true;
+    static inline float heightScale = 0.1f;
+
+    static inline bool hdr = true;
+    static inline float exposure = 1.0f;
 };

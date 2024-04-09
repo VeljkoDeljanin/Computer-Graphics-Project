@@ -30,5 +30,6 @@ namespace Render {
         unsigned int VAO{}, VBO{}, RBO{};
         unsigned int m_framebuffer{};
         unsigned int m_textureColorBufferMultiSampled{};
+        unsigned int m_colorBuffer{};
     };
 }

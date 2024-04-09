@@ -54,11 +54,11 @@ void Entities::Light::m_UpdatePointsLights(const std::shared_ptr<Render::Shader>
         shader->SetVec3("pointLights[" + std::to_string(i) + "].position", m_pointLightPositions[i]);
 
         shader->SetFloat("pointLights[" + std::to_string(i) + "].constant", 1.0f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.35f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.44f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.14f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.07f);
 
-        shader->SetVec3("pointLights[" + std::to_string(i) + "].ambient", glm::vec3(0.5f));
-        shader->SetVec3("pointLights[" + std::to_string(i) + "].diffuse", glm::vec3(0.8f));
+        shader->SetVec3("pointLights[" + std::to_string(i) + "].ambient", glm::vec3(0.1f));
+        shader->SetVec3("pointLights[" + std::to_string(i) + "].diffuse", glm::vec3(1.0f));
         shader->SetVec3("pointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f));
     }
 }
