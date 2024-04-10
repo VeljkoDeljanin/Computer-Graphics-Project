@@ -20,4 +20,5 @@ struct ProgramState {
 
     static inline bool hdr = true;
     static inline float exposure = 1.0f;
+    static inline bool bloom = true;
 };

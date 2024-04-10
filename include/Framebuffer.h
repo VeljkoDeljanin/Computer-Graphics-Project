@@ -25,11 +25,18 @@ namespace Render {
     private:
         Framebuffer() = default;
 
-        Shader *m_shader{};
+        Shader *m_postProcessingShader{};
+        Shader *m_blurShader{};
 
         unsigned int VAO{}, VBO{}, RBO{};
         unsigned int m_framebuffer{};
         unsigned int m_textureColorBufferMultiSampled{};
-        unsigned int m_colorBuffer{};
+        unsigned int m_colorBuffers[2]{};
+
+        unsigned int m_pingpongFBO[2]{};
+        unsigned int m_pingpongColorBuffers[2]{};
+
+        bool horizontal{}, firstIteration{};
+        unsigned int amount{};
     };
 }

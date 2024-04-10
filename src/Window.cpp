@@ -126,6 +126,9 @@ void Render::Window::m_ProcessInput() {
                     case GLFW_KEY_H:
                         ProgramState::hdr = !ProgramState::hdr;
                         break;
+                    case GLFW_KEY_B:
+                        ProgramState::bloom = !ProgramState::bloom;
+                        break;
                 }
             }
         }

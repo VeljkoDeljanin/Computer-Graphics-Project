@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2DMS hdrBuffer;
+uniform sampler2DMS bloomBlur;
 uniform sampler2DMS screenTexture;
 
 uniform int framebufferWidth;
@@ -17,6 +18,7 @@ uniform bool edgeDetectionKernelEnabled;
 uniform bool embossKernelEnabled;
 
 uniform bool hdr;
+uniform bool bloom;
 uniform float exposure;
 
 ivec2 offsets[9] = ivec2[](
@@ -86,6 +88,7 @@ vec3 CalculateColor(float[9] kernel) {
 
     vec3 sampleTexAA[9];
     vec3 sampleTexHDR[9];
+    vec3 sampleTexBloom[9];
     vec3 finalColor[9];
 
     for (int i = 0; i < 9; i++) {
@@ -102,6 +105,16 @@ vec3 CalculateColor(float[9] kernel) {
         sample3 = texelFetch(hdrBuffer, coords + offsets[i], 3).rgb;
 
         sampleTexHDR[i] = 0.25f * (sample0 + sample1 + sample2 + sample3);
+
+        sample0 = texelFetch(bloomBlur, coords + offsets[i], 0).rgb;
+        sample1 = texelFetch(bloomBlur, coords + offsets[i], 1).rgb;
+        sample2 = texelFetch(bloomBlur, coords + offsets[i], 2).rgb;
+        sample3 = texelFetch(bloomBlur, coords + offsets[i], 3).rgb;
+
+        sampleTexBloom[i] = 0.25f * (sample0 + sample1 + sample2 + sample3);
+
+        if (bloom)
+            sampleTexHDR[i] += sampleTexBloom[i];
 
         vec3 hdrResult;
         if (hdr)

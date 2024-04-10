@@ -1,5 +1,6 @@
 #version 460 core
 layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
 struct Material {
     sampler2D texture_diffuse1;
@@ -92,6 +93,12 @@ void main() {
     result += CalcSpotLight(spotLight, normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[6], fs_in.TangentLightDir[1], texCoords);
 
     FragColor = vec4(result, 1.0f);
+
+    float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
+    if (brightness > 1.0f)
+        BrightColor = vec4(FragColor.rgb, 1.0f);
+    else
+        BrightColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) {

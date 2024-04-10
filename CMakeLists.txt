@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-set(PROJECT_NAME ChessGL)
+set(PROJECT_NAME ParkGL)
 project(${PROJECT_NAME})
 
 function(watch)

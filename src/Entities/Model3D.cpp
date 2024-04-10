@@ -149,23 +149,23 @@ void Entities::Model3D::m_UpdateParkBench(const std::shared_ptr<Render::Shader> 
 }
 
 void Entities::Model3D::m_UpdateBillboard(const std::shared_ptr<Render::Shader> &shader) {
-    model = glm::mat4(1.0f);
+    for (int i = 0; i < 4; i++) {
+        model = glm::mat4(1.0f);
 
-    model = glm::translate(model, glm::vec3(-4.5f, 0.01f, 0.0f));
-    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.013f));
+        model = glm::translate(model, m_billboardPositions[i]);
+        if (i == 0)
+            model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        else if (i == 1)
+            model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        else if (i == 2)
+            model = glm::rotate(model, glm::radians(-135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        else if (i == 3)
+            model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, m_billboardScales[i]);
 
-    shader->SetMat4("model", model);
-    m_billboard.Draw(*shader);
-
-    model = glm::mat4(1.0f);
-
-    model = glm::translate(model, glm::vec3(4.5f, 0.01f, 0.0f));
-    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.013f));
-
-    shader->SetMat4("model", model);
-    m_billboard.Draw(*shader);
+        shader->SetMat4("model", model);
+        m_billboard.Draw(*shader);
+    }
 }
 
 void Entities::Model3D::m_UpdateTelescope(const std::shared_ptr<Render::Shader> &shader) {

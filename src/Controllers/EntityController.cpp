@@ -3,6 +3,7 @@
 #include "Entities/Light.h"
 #include "Entities/Model3D.h"
 #include "Entities/Ground.h"
+#include "Entities/LightBox.h"
 #include "Entities/Skybox.h"
 
 void Controllers::EntityController::Init() {
@@ -27,6 +28,7 @@ void Controllers::EntityController::m_InitEntities() {
                                                              m_shaders["instancedEntity"]));
     m_entities.push_back(std::make_unique<Entities::Ground>(m_shaders["entity"], m_shaders["normalMapEntity"],
                                                             m_shaders["normalAndHeightMapEntity"]));
+    m_entities.push_back(std::make_unique<Entities::LightBox>(m_shaders["lightBox"]));
     m_entities.push_back(std::make_unique<Entities::Skybox>(m_shaders["skybox"]));
 }
 
@@ -41,4 +43,6 @@ void Controllers::EntityController::m_InitShaders() {
                                                                              "resources/shaders/skybox.fs");
     m_shaders["instancedEntity"]          = std::make_shared<Render::Shader>("resources/shaders/instancedEntity.vs",
                                                                              "resources/shaders/entity.fs");
+    m_shaders["lightBox"]                 = std::make_shared<Render::Shader>("resources/shaders/entity.vs",
+                                                                             "resources/shaders/lightBox.fs");
 }

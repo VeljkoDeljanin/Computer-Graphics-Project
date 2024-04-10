@@ -42,8 +42,8 @@ void Entities::Light::m_UpdateDirLight(const std::shared_ptr<Render::Shader>& sh
     shader->SetVec3("dirLight.direction", glm::vec3(-0.35f, -0.6f, -1.0f));
 
     shader->SetVec3("dirLight.ambient", glm::vec3(0.1f));
-    shader->SetVec3("dirLight.diffuse", glm::vec3(0.1f));
-    shader->SetVec3("dirLight.specular", glm::vec3(1.0f));
+    shader->SetVec3("dirLight.diffuse", glm::vec3(0.2f));
+    shader->SetVec3("dirLight.specular", glm::vec3(0.5f));
 }
 
 void Entities::Light::m_UpdatePointsLights(const std::shared_ptr<Render::Shader> &shader) const {
@@ -54,11 +54,11 @@ void Entities::Light::m_UpdatePointsLights(const std::shared_ptr<Render::Shader>
         shader->SetVec3("pointLights[" + std::to_string(i) + "].position", m_pointLightPositions[i]);
 
         shader->SetFloat("pointLights[" + std::to_string(i) + "].constant", 1.0f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.14f);
-        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 0.07f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].linear", 0.7f);
+        shader->SetFloat("pointLights[" + std::to_string(i) + "].quadratic", 1.8f);
 
         shader->SetVec3("pointLights[" + std::to_string(i) + "].ambient", glm::vec3(0.1f));
-        shader->SetVec3("pointLights[" + std::to_string(i) + "].diffuse", glm::vec3(1.0f));
+        shader->SetVec3("pointLights[" + std::to_string(i) + "].diffuse", glm::vec3(10.0f));
         shader->SetVec3("pointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f));
     }
 }
@@ -80,8 +80,8 @@ void Entities::Light::m_UpdateSpotLight(const std::shared_ptr<Render::Shader>& s
 
     shader->SetVec3("spotLight.ambient", glm::vec3(0.0f));
     if (ProgramState::flashlight) {
-        shader->SetVec3("spotLight.diffuse", glm::vec3(1.0f));
-        shader->SetVec3("spotLight.specular", glm::vec3(0.5f));
+        shader->SetVec3("spotLight.diffuse", glm::vec3(4.0f));
+        shader->SetVec3("spotLight.specular", glm::vec3(0.3f));
     }
     else {
         shader->SetVec3("spotLight.diffuse", glm::vec3(0.0f));

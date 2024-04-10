@@ -57,6 +57,20 @@ namespace Entities {
             glm::vec3(-4.5f, 0.0f, -4.5f)
         };
 
+        std::array<glm::vec3, 4> m_billboardPositions {
+            glm::vec3(-4.01f, 0.0f, 1.0f),
+            glm::vec3(-4.01f, 0.0f, -1.0f),
+            glm::vec3(4.01f, 0.0f, 1.0f),
+            glm::vec3(4.01f, 0.0f, -1.0f)
+        };
+
+        std::array<glm::vec3, 4> m_billboardScales {
+            glm::vec3(0.009f, 0.008f, 0.009f),
+            glm::vec3(0.009f, 0.008f, 0.009f),
+            glm::vec3(0.008f, 0.0077f, 0.009f),
+            glm::vec3(0.011f, 0.008f, 0.009f)
+        };
+
         void m_UpdateShader(const std::shared_ptr<Render::Shader>& shader);
 
         void m_UpdateFlashlight(const std::shared_ptr<Render::Shader> &shader);
