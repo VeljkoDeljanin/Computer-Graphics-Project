@@ -28,10 +28,24 @@ namespace Entities {
             glm::vec3(-4.5f, 2.4f, -4.5f)
         };
 
+        std::array<glm::vec3, 4> m_billboardLightPositions {
+            glm::vec3(-3.25f, 0.0f, 0.1f),
+            glm::vec3(-3.25f, 0.0f, -0.1f),
+            glm::vec3(3.25f, 0.0f, 0.1f),
+            glm::vec3(3.25f, 0.0f, -0.1f)
+        };
+
+        std::array<glm::vec3, 4> m_billboardLightsDirections {
+            glm::vec3(1.0f, 0.0f, -1.0f),
+            glm::vec3(1.0f, 0.0f, 1.0f),
+            glm::vec3(-1.0f, 0.0f, -1.0f),
+            glm::vec3(-1.0f, 0.0f, 1.0f)
+        };
+
         void m_UpdateShader(const std::shared_ptr<Render::Shader>& shader);
 
-        static void m_UpdateDirLight(const std::shared_ptr<Render::Shader>& shader) ;
+        static void m_UpdateDirLight(const std::shared_ptr<Render::Shader>& shader);
         void m_UpdatePointsLights(const std::shared_ptr<Render::Shader>& shader) const;
-        static void m_UpdateSpotLight(const std::shared_ptr<Render::Shader>& shader) ;
+        void m_UpdateSpotLight(const std::shared_ptr<Render::Shader>& shader) const;
     };
 }

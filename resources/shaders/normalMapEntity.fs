@@ -46,12 +46,13 @@ struct SpotLight {
 };
 
 #define NR_POINT_LIGHTS 6
+#define NR_BILLBOARD_LIGHTS 4
 
 in VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
-    vec3 TangentLightPos[7];
-    vec3 TangentLightDir[2];
+    vec3 TangentLightPos[11];
+    vec3 TangentLightDir[6];
     vec3 TangentViewPos;
     vec3 TangentFragPos;
 } fs_in;
@@ -59,8 +60,12 @@ in VS_OUT {
 uniform vec3 viewPosition;
 uniform DirLight dirLight;
 uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLights[NR_BILLBOARD_LIGHTS + 1];
 uniform Material material;
+
+uniform bool lampLights;
+uniform bool flashlight;
+uniform bool billboardLights;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 tangentLightDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 tangentLightPos);
@@ -77,10 +82,16 @@ void main() {
 
     vec3 result = CalcDirLight(dirLight, normal, viewDir, fs_in.TangentLightDir[0]);
 
-    for (int i = 0; i < NR_POINT_LIGHTS; i++)
-        result += CalcPointLight(pointLights[i], normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[i]);
+    if (lampLights)
+        for (int i = 0; i < NR_POINT_LIGHTS; i++)
+            result += CalcPointLight(pointLights[i], normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[i]);
 
-    result += CalcSpotLight(spotLight, normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[6], fs_in.TangentLightDir[1]);
+    if (flashlight)
+        result += CalcSpotLight(spotLights[0], normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[6], fs_in.TangentLightDir[1]);
+
+    if (billboardLights)
+        for (int i = 0; i < NR_BILLBOARD_LIGHTS; i++)
+            result += CalcSpotLight(spotLights[i+1], normal, fs_in.FragPos, viewDir, fs_in.TangentLightPos[i+7], fs_in.TangentLightDir[i+2]);
 
     FragColor = vec4(result, 1.0f);
 

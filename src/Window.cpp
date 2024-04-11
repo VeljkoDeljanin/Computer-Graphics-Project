@@ -4,6 +4,7 @@
 #include "Error.h"
 #include "Controllers/ServiceLocator.h"
 #include "ProgramState.h"
+#include "Camera.h"
 
 void Render::Window::Notify(Controllers::Event event) {
     m_eventQueue.push_back(event);
@@ -76,6 +77,14 @@ void Render::Window::m_ProcessInput() {
                 m_keysPressedDown[static_cast<int>(Render::Keys::KEY_ARROW_DOWN)]
                         = event.keyboard.keyState == Controllers::KeyState::Pressed;
             }
+            else if (event.keyboard.key == GLFW_KEY_LEFT) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_ARROW_LEFT)]
+                        = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
+            else if (event.keyboard.key == GLFW_KEY_RIGHT) {
+                m_keysPressedDown[static_cast<int>(Render::Keys::KEY_ARROW_RIGHT)]
+                        = event.keyboard.keyState == Controllers::KeyState::Pressed;
+            }
             else if (event.keyboard.keyState == Controllers::KeyState::JustPressed) {
                 switch (event.keyboard.key) {
                     case GLFW_KEY_F:
@@ -84,15 +93,21 @@ void Render::Window::m_ProcessInput() {
                     case GLFW_KEY_V:
                         ProgramState::VSync = !ProgramState::VSync;
                         break;
-                    case GLFW_KEY_F3:
+                    case GLFW_KEY_N:
+                        ProgramState::flyCamera = !ProgramState::flyCamera;
+                        break;
+                    case GLFW_KEY_F2:
                         ProgramState::antiAliasing = !ProgramState::antiAliasing;
                         if (ProgramState::antiAliasing)
                             glEnable(GL_MULTISAMPLE);
                         else
                             glDisable(GL_MULTISAMPLE);
                         break;
-                    case GLFW_KEY_F4:
+                    case GLFW_KEY_F3:
                         ProgramState::grayscale = !ProgramState::grayscale;
+                        break;
+                    case GLFW_KEY_F4:
+                        m_DisableAllKernelEffects();
                         break;
                     case GLFW_KEY_F5:
                         if (!ProgramState::sharpenKernel)
@@ -129,12 +144,18 @@ void Render::Window::m_ProcessInput() {
                     case GLFW_KEY_B:
                         ProgramState::bloom = !ProgramState::bloom;
                         break;
+                    case GLFW_KEY_L:
+                        ProgramState::lampLights = !ProgramState::lampLights;
+                        break;
+                    case GLFW_KEY_K:
+                        ProgramState::billboardLights = !ProgramState::billboardLights;
+                        break;
                 }
             }
         }
     }
 
-    for (int key = 0; key < 4; key++)
+    for (int key = 0; key < 6; key++)
         if (m_keysPressedDown[key])
             m_ProcessKeyPressedDown(static_cast<Keys>(key));
 
@@ -151,28 +172,42 @@ void Render::Window::m_DisableAllKernelEffects() {
 void Render::Window::m_ProcessKeyPressedDown(Keys keyPressedDown) {
     switch (keyPressedDown) {
         case Keys::KEY_Q:
-            if (ProgramState::exposure > 0.1f)
+            if (ProgramState::exposure >= 0.1f)
                 ProgramState::exposure -= 0.005f;
             else
                 ProgramState::exposure = 0.1f;
             break;
         case Keys::KEY_E:
-            if (ProgramState::exposure < 10.0f)
+            if (ProgramState::exposure <= 10.0f)
                 ProgramState::exposure += 0.005f;
             else
                 ProgramState::exposure = 10.0f;
             break;
         case Keys::KEY_ARROW_UP:
-            if (ProgramState::heightScale < 0.3f)
+            if (ProgramState::heightScale <= 0.3f)
                 ProgramState::heightScale += 0.001f;
             else
                 ProgramState::heightScale = 0.3f;
             break;
         case Keys::KEY_ARROW_DOWN:
-            if (ProgramState::heightScale > 0.05f)
+            if (ProgramState::heightScale >= 0.05f)
                 ProgramState::heightScale -= 0.001f;
             else
                 ProgramState::heightScale = 0.05f;
+            break;
+        case Keys::KEY_ARROW_LEFT:
+            if (ProgramState::movementSpeed >= 1.0f)
+                ProgramState::movementSpeed -= 0.01f;
+            else
+                ProgramState::movementSpeed = 1.0f;
+            Render::Camera::GetInstance().SetMovementSpeed(ProgramState::movementSpeed);
+            break;
+        case Keys::KEY_ARROW_RIGHT:
+            if (ProgramState::movementSpeed <= 10.0f)
+                ProgramState::movementSpeed += 0.01f;
+            else
+                ProgramState::movementSpeed = 10.0f;
+            Render::Camera::GetInstance().SetMovementSpeed(ProgramState::movementSpeed);
             break;
     }
 }

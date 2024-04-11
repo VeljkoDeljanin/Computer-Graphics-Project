@@ -5,14 +5,14 @@ in vec2 TexCoords;
 
 uniform sampler2DMS image;
 
-uniform int framebufferWidth;
-uniform int framebufferHeight;
+uniform int screenWidth;
+uniform int screenHeight;
 
 uniform bool horizontal;
 const float weight[5] = float[] (0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162);
 
 void main() {
-    ivec2 viewportDim = ivec2(framebufferWidth, framebufferHeight);
+    ivec2 viewportDim = ivec2(screenWidth, screenHeight);
     ivec2 coords = ivec2(viewportDim * TexCoords);
 
     vec3 sample0 = texelFetch(image, coords, 0).rgb;

@@ -25,12 +25,13 @@ namespace Render {
     private:
         GuiWindow();
 
-        float m_deltaTime = {};
-        volatile bool m_guiEnabled = false;
-        static inline bool m_cursorEnabled = false;
+        float m_deltaTime{};
         std::vector<Controllers::Event> m_eventQueue;
+        int m_kernelBefore{};
 
         void m_ProcessInput();
-        void m_Draw() const;
+        void m_Draw();
+
+        static void m_HelpMarker(const char *desc);
     };
 }

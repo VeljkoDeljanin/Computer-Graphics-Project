@@ -106,6 +106,7 @@ void Render::Framebuffer::Clear() {
     glDeleteTextures(2, m_pingpongColorBuffers);
 
     delete m_postProcessingShader;
+    delete m_blurShader;
 }
 
 void Render::Framebuffer::Bind() const {
@@ -122,8 +123,8 @@ void Render::Framebuffer::Unbind() {
 
     m_blurShader->ActivateShader();
 
-    m_blurShader->SetInt("framebufferWidth", Data::FramebufferData::framebufferWidth);
-    m_blurShader->SetInt("framebufferHeight", Data::FramebufferData::framebufferHeight);
+    m_blurShader->SetInt("screenWidth", Data::WindowData::screenWidth);
+    m_blurShader->SetInt("screenHeight", Data::WindowData::screenHeight);
 
     glBindVertexArray(VAO);
     for (unsigned int i = 0; i < amount; i++) {

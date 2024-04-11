@@ -40,6 +40,8 @@ namespace Render {
         [[nodiscard]] glm::vec3 GetUp() const;
         [[nodiscard]] glm::vec3 GetRight() const;
 
+        void SetMovementSpeed(float movementSpeed);
+
         void ProcessKeyboard(Direction direction, float deltaTime);
         void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
         void ProcessMouseScroll(float yoffset);
@@ -48,7 +50,7 @@ namespace Render {
 
         float Yaw              = -270.0f;
         float Pitch            = 0.0f;
-        float MovementSpeed    = 2.5f;
+        float MovementSpeed;
         float MouseSensitivity = 0.1f;
         float Zoom             = 45.0f;
 

@@ -8,8 +8,8 @@ layout (location = 4) in vec3 aBitangent;
 out VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
-    vec3 TangentLightPos[7];
-    vec3 TangentLightDir[2];
+    vec3 TangentLightPos[11];
+    vec3 TangentLightDir[6];
     vec3 TangentViewPos;
     vec3 TangentFragPos;
 } vs_out;
@@ -18,8 +18,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-uniform vec3 lightPos[7];
-uniform vec3 lightDir[2];
+uniform vec3 lightPos[11];
+uniform vec3 lightDir[6];
 uniform vec3 viewPos;
 
 void main() {
@@ -33,9 +33,9 @@ void main() {
     vec3 B = cross(N, T);
 
     mat3 TBN = transpose(mat3(T, B, N));
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 11; i++)
         vs_out.TangentLightPos[i] = TBN * lightPos[i];
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 6; i++)
         vs_out.TangentLightDir[i] = TBN * lightDir[i];
     vs_out.TangentViewPos  = TBN * viewPos;
     vs_out.TangentFragPos  = TBN * vs_out.FragPos;

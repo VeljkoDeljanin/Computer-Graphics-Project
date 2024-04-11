@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Controllers/ServiceLocator.h"
+#include "ProgramState.h"
 
 void Render::Camera::Notify(Controllers::Event event) {
     m_eventQueue.push_back(event);
@@ -69,6 +70,30 @@ glm::vec3 Render::Camera::GetPosition() const {
     return Position;
 }
 
+float Render::Camera::GetYaw() const {
+    return Yaw;
+}
+
+float Render::Camera::GetPitch() const {
+    return Pitch;
+}
+
+glm::vec3 Render::Camera::GetFront() const {
+    return Front;
+}
+
+glm::vec3 Render::Camera::GetUp() const {
+    return Up;
+}
+
+glm::vec3 Render::Camera::GetRight() const {
+    return Right;
+}
+
+void Render::Camera::SetMovementSpeed(float movementSpeed) {
+    MovementSpeed = movementSpeed;
+}
+
 void Render::Camera::ProcessKeyboard(Render::Direction direction, float deltaTime) {
     float velocity = MovementSpeed * deltaTime;
     switch (direction) {
@@ -92,7 +117,8 @@ void Render::Camera::ProcessKeyboard(Render::Direction direction, float deltaTim
             break;
     }
 
-//    Position.y = 1.3f;
+    if (!ProgramState::flyCamera)
+        Position.y = 1.3f;
 }
 
 void Render::Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
@@ -121,8 +147,8 @@ void Render::Camera::ProcessMouseScroll(float yoffset) {
         Zoom = 45.0f;
 }
 
-Render::Camera::Camera() : Position(glm::vec3(0.0f, 1.3f, -12.5f)), WorldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
-                           Front(glm::vec3(0.0f, 0.0f, 1.0f)) {
+Render::Camera::Camera() : MovementSpeed(ProgramState::movementSpeed), Position(glm::vec3(0.0f, 1.3f, -12.5f)),
+                           WorldUp(glm::vec3(0.0f, 1.0f, 0.0f)), Front(glm::vec3(0.0f, 0.0f, 1.0f)) {
     Controllers::ServiceLocator::GetInstance().GetEventController().SubscribeToEvent(
             Controllers::EventType::Keyboard, this
     );
@@ -144,24 +170,4 @@ void Render::Camera::m_UpdateCameraVectors() {
     Front = glm::normalize(front);
     Right = glm::normalize(glm::cross(Front, WorldUp));
     Up    = glm::normalize(glm::cross(Right, Front));
-}
-
-float Render::Camera::GetYaw() const {
-    return Yaw;
-}
-
-float Render::Camera::GetPitch() const {
-    return Pitch;
-}
-
-glm::vec3 Render::Camera::GetFront() const {
-    return Front;
-}
-
-glm::vec3 Render::Camera::GetUp() const {
-    return Up;
-}
-
-glm::vec3 Render::Camera::GetRight() const {
-    return Right;
 }

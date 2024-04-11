@@ -10,7 +10,9 @@ namespace Render {
         KEY_Q,
         KEY_E,
         KEY_ARROW_UP,
-        KEY_ARROW_DOWN
+        KEY_ARROW_DOWN,
+        KEY_ARROW_LEFT,
+        KEY_ARROW_RIGHT
     };
 
     class Window : public Controllers::Observer {
@@ -41,7 +43,7 @@ namespace Render {
         static inline GLFWwindow *m_glfwWindow = nullptr;
         bool m_running = false;
         std::vector<Controllers::Event> m_eventQueue;
-        std::array<bool, 4> m_keysPressedDown = {false};
+        std::array<bool, 6> m_keysPressedDown = {false};
 
         void m_ProcessInput();
         static void m_DisableAllKernelEffects();
