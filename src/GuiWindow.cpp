@@ -92,6 +92,18 @@ void Render::GuiWindow::m_Draw() {
         ImGui::SetNextWindowSize(ImVec2(ProgramState::guiWindowWidth, ProgramState::guiWindowHeight), ImGuiCond_Once);
         ImGui::Begin("Settings");
 
+        if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_None)) {
+            ImGui::Bullet(); ImGui::Checkbox("VSync (Shortcut: V)", &ProgramState::VSync);
+            ImGui::Bullet(); ImGui::SliderFloat("Movement Speed", &ProgramState::movementSpeed, 1.0f, 10.0f);
+            ImGui::SameLine(); m_HelpMarker("Use ARROW_LEFT/ARROW_RIGHT to decrease/increase movement speed.");
+            Camera::GetInstance().SetMovementSpeed(ProgramState::movementSpeed);
+            ImGui::Bullet(); ImGui::Checkbox("Mouse Cursor (Shortcut: C)", &ProgramState::cursorEnabled);
+            if (!ProgramState::cursorEnabled)
+                glfwSetInputMode(Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            else
+                glfwSetInputMode(Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
         if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_None)) {
             Camera &camera = Camera::GetInstance();
             ImGui::Text("Camera Info:");
@@ -101,14 +113,6 @@ void Render::GuiWindow::m_Draw() {
             ImGui::Bullet(); ImGui::Text("Camera front: (%f, %f, %f)", camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
             ImGui::Bullet(); ImGui::Text("Zoom: %f", camera.GetZoom());
             ImGui::Unindent();
-            ImGui::Bullet(); ImGui::SliderFloat("Movement Speed", &ProgramState::movementSpeed, 1.0f, 10.0f);
-            ImGui::SameLine(); m_HelpMarker("Use ARROW_LEFT/ARROW_RIGHT to decrease/increase movement speed.");
-            camera.SetMovementSpeed(ProgramState::movementSpeed);
-            ImGui::Bullet(); ImGui::Checkbox("Mouse Cursor (Shortcut: C)", &ProgramState::cursorEnabled);
-            if (!ProgramState::cursorEnabled)
-                glfwSetInputMode(Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            else
-                glfwSetInputMode(Window::GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             ImGui::Bullet(); ImGui::Checkbox("Fly Camera (Shortcut: N)", &ProgramState::flyCamera);
         }
 
