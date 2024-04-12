@@ -17,7 +17,7 @@ Entities::Ground::Ground(std::shared_ptr<Render::Shader> shader, std::shared_ptr
     m_grassDiffMap = Render::TextureFromFile("grass_path_diff.png", "resources/textures/grass_ground");
     m_grassSpecMap = Render::TextureFromFile("grass_path_spec.png", "resources/textures/grass_ground");
     m_grassNormMap = Render::TextureFromFile("grass_path_nor.png", "resources/textures/grass_ground");
-    m_grassHeightMap = Render::TextureFromFile("grass_path_disp.png", "resources/textures/grass_ground");
+    m_grassHeightMap = Render::TextureFromFile("grass_path_disp_.jpg", "resources/textures/grass_ground");
     m_cobblestoneDiffMap = Render::TextureFromFile("cobblestone_diff.png", "resources/textures/cobblestone_ground");
     m_cobblestoneSpecMap = Render::TextureFromFile("cobblestone_spec.png", "resources/textures/cobblestone_ground");
     m_cobblestoneNormMap = Render::TextureFromFile("cobblestone_nor.png", "resources/textures/cobblestone_ground");
@@ -117,10 +117,10 @@ void Entities::Ground::m_SetupGrassGround() {
     glm::vec3 pos3(15.0f, 0.0f, 15.0f);
     glm::vec3 pos4(15.0f,  0.0f, -15.0f);
 
-    glm::vec2 uv1(10.0f, 10.0f);
-    glm::vec2 uv2(10.0f, 0.0f);
-    glm::vec2 uv3(0.0f, 0.0f);
-    glm::vec2 uv4(0.0f, 10.0f);
+    glm::vec2 uv1(0.0f, 10.0f);
+    glm::vec2 uv2(0.0f, 0.0f);
+    glm::vec2 uv3(10.0f, 0.0f);
+    glm::vec2 uv4(10.0f, 10.0f);
 
     glm::vec3 nm(0.0f, 1.0f, 0.0f);
 
@@ -210,14 +210,14 @@ void Entities::Ground::m_SetupCobblestoneGround() {
     glm::vec3 pos7(2.0f, 0.01f, -5.0f);
     glm::vec3 pos8(2.0f,  0.01f, -13.0f);
 
-    glm::vec2 uv1(10.0f, 10.0f);
-    glm::vec2 uv2(10.0f, 0.0f);
-    glm::vec2 uv3(0.0f, 0.0f);
-    glm::vec2 uv4(0.0f, 10.0f);
-    glm::vec2 uv5(4.0f, 8.0f);
-    glm::vec2 uv6(4.0f, 0.0f);
-    glm::vec2 uv7(0.0f, 0.0f);
-    glm::vec2 uv8(0.0f, 8.0f);
+    glm::vec2 uv1(0.0f, 10.0f);
+    glm::vec2 uv2(0.0f, 0.0f);
+    glm::vec2 uv3(10.0f, 0.0f);
+    glm::vec2 uv4(10.0f, 10.0f);
+    glm::vec2 uv5(0.0f, 8.0f);
+    glm::vec2 uv6(0.0f, 0.0f);
+    glm::vec2 uv7(4.0f, 0.0f);
+    glm::vec2 uv8(4.0f, 8.0f);
 
     glm::vec3 nm(0.0f, 1.0f, 0.0f);
 
