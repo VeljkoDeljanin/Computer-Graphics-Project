@@ -1,0 +1,24 @@
+# Blender 4.1.0 MTL File: 'outdoor_table_chair_set_01_2k.blend'
+# www.blender.org
+
+newmtl outdoor_table_chair_set_01_chair
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd chair_diffuse.png
+map_Ks chair_specular.png
+map_bump -bm 1.000000 chair_normal.png
+
+newmtl outdoor_table_chair_set_01_table
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd table_diffuse.png
+map_Ks table_specular.png
+map_bump -bm 1.000000 table_normal.png

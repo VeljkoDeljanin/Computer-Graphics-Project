@@ -3,9 +3,9 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd polySurface1_albedo.png
-map_Ks polySurface1_specular.png
-bump -bm 1 polySurface1_normal.png
+map_Kd diffuse.png
+map_Ks specular.png
+bump -bm 1 normal.png
 Ni 1.00
 Ks 0.50 0.50 0.50
 newmtl blinn4SG
@@ -13,8 +13,8 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd polySurface1_albedo.png
-map_Ks polySurface1_specular.png
-bump -bm 1 polySurface1_normal.png
+map_Kd diffuse.png
+map_Ks specular.png
+bump -bm 1 normal.png
 Ni 1.00
 Ks 0.50 0.50 0.50

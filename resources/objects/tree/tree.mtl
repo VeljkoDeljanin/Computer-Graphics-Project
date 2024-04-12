@@ -20,4 +20,4 @@ Ni 1.500000
 d 1.000000
 illum 2
 map_Kd Trank_baseColor.png
-map_Bump -bm 1.000000 Trank_normal.png
+map_bump -bm 1.000000 Trank_normal.png

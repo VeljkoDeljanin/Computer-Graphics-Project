@@ -34,6 +34,7 @@ namespace Entities {
         Render::Model m_telescope;
         Render::Model m_chessSet;
         Render::Model m_tree;
+        Render::Model m_ironGate;
 
         std::array<glm::vec3, 4> m_chessTablePositions {
             glm::vec3(3.5f, 0.01f, -3.5f),
@@ -81,6 +82,7 @@ namespace Entities {
         void m_UpdateBillboard(const std::shared_ptr<Render::Shader> &shader);
         void m_UpdateTelescope(const std::shared_ptr<Render::Shader> &shader);
         void m_UpdateChessSet(const std::shared_ptr<Render::Shader> &shader);
+        void m_UpdateIronGate(const std::shared_ptr<Render::Shader> &shader);
 
         void m_SetupInstancing();
         void m_UpdateInstancedTrees();

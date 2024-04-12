@@ -8,14 +8,15 @@ Entities::Model3D::Model3D(std::shared_ptr<Render::Shader> shader, std::shared_p
                            std::shared_ptr<Render::Shader> shader3)
 : m_shader(std::move(shader)), m_normalMapShader(std::move(shader2)), m_instancingShader(std::move(shader3)),
   m_flashlight("resources/objects/flashlight/newer.obj"),
-  m_fountain("resources/objects/fountain/scene.gltf"),
-  m_tableChairSet("resources/objects/table_chair_set/outdoor_table_chair_set_01_4k.gltf"),
+  m_fountain("resources/objects/fountain/fountain.obj"),
+  m_tableChairSet("resources/objects/table_chair_set/table_chair_set.obj"),
   m_streetLamp("resources/objects/street_lamp/Street_Lamp_7.obj"),
-  m_parkBench("resources/objects/park_bench/scene.gltf"),
+  m_parkBench("resources/objects/park_bench/park_bench.obj"),
   m_billboard("resources/objects/billboard/3d-model.obj"),
-  m_telescope("resources/objects/telescope/scene.gltf"),
+  m_telescope("resources/objects/telescope/telescope.obj"),
   m_chessSet("resources/objects/chess_set/untitled.obj"),
-  m_tree("resources/objects/tree/tree.obj") {
+  m_tree("resources/objects/tree/tree.obj"),
+  m_ironGate("resources/objects/iron_gate/large_iron_gate.obj") {
 
     m_flashlight.SetShaderTextureNamePrefix("material.");
     m_fountain.SetShaderTextureNamePrefix("material.");
@@ -26,6 +27,7 @@ Entities::Model3D::Model3D(std::shared_ptr<Render::Shader> shader, std::shared_p
     m_telescope.SetShaderTextureNamePrefix("material.");
     m_chessSet.SetShaderTextureNamePrefix("material.");
     m_tree.SetShaderTextureNamePrefix("material.");
+    m_ironGate.SetShaderTextureNamePrefix("material.");
 
     m_instancingShader->ActivateShader();
     m_instancingShader->SetInt("material.texture_diffuse1", 0);
@@ -61,20 +63,31 @@ void Entities::Model3D::m_UpdateShader(const std::shared_ptr<Render::Shader> &sh
     shader->SetMat4("projection", projection);
 
     if (!m_hasNormalMap) {
-        m_UpdateFountain(shader);
-        m_UpdateTableChairSet(shader);
-        m_UpdateStreetLamp(shader);
-        m_UpdateParkBench(shader);
         m_UpdateBillboard(shader);
-        m_UpdateTelescope(shader);
-        m_UpdateChessSet(shader);
 
-        if (!ProgramState::normalMapping)
+        if (!ProgramState::normalMapping) {
+            m_UpdateTableChairSet(shader);
+            m_UpdateFountain(shader);
             m_UpdateFlashlight(shader);
+            m_UpdateStreetLamp(shader);
+            m_UpdateChessSet(shader);
+            m_UpdateTelescope(shader);
+            m_UpdateIronGate(shader);
+            m_UpdateParkBench(shader);
+        }
+
     }
 
-    if (m_hasNormalMap && ProgramState::normalMapping)
+    if (m_hasNormalMap && ProgramState::normalMapping) {
+        m_UpdateTableChairSet(shader);
+        m_UpdateFountain(shader);
         m_UpdateFlashlight(shader);
+        m_UpdateStreetLamp(shader);
+        m_UpdateChessSet(shader);
+        m_UpdateTelescope(shader);
+        m_UpdateIronGate(shader);
+        m_UpdateParkBench(shader);
+    }
 
     shader->DeactivateShader();
 }
@@ -171,10 +184,8 @@ void Entities::Model3D::m_UpdateBillboard(const std::shared_ptr<Render::Shader> 
 void Entities::Model3D::m_UpdateTelescope(const std::shared_ptr<Render::Shader> &shader) {
     model = glm::mat4(1.0f);
 
-    model = glm::translate(model, glm::vec3(0.0f, 0.91f, 4.0f));
-    model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::rotate(model, glm::radians(-19.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.75f, 4.0f));
+    model = glm::rotate(model, glm::radians(-71.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.005f));
 
     shader->SetMat4("model", model);
@@ -191,6 +202,16 @@ void Entities::Model3D::m_UpdateChessSet(const std::shared_ptr<Render::Shader> &
         shader->SetMat4("model", model);
         m_chessSet.Draw(*shader);
     }
+}
+
+void Entities::Model3D::m_UpdateIronGate(const std::shared_ptr<Render::Shader> &shader) {
+    model = glm::mat4(1.0f);
+
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -13.0f));
+    model = glm::scale(model, glm::vec3(1.4f, 1.0f, 1.0f));
+
+    shader->SetMat4("model", model);
+    m_ironGate.Draw(*shader);
 }
 
 void Entities::Model3D::m_SetupInstancing() {

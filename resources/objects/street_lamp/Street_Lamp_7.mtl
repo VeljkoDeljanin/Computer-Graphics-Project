@@ -10,8 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_bump Street_lamp_7_Normal.png
-map_Kd Street_lamp_7_BaseColor.png
-map_Ns Street_lamp_7_Roughness.png
-map_d Street_lamp_7_opacity.png
-map_Pm Street_lamp_7_Metallic.png
+map_Kd diffuse.png
+map_Ks specular.jpg
+map_bump normal.png
